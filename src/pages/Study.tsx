@@ -151,7 +151,7 @@ const Study = () => {
               className="space-y-3"
             >
               {selectedSubject.chapters.map((ch, i) => {
-                const isLocked = !isPremium && i >= 3;
+                const isLocked = false;
                 return (
                 <motion.div
                   key={ch.id}

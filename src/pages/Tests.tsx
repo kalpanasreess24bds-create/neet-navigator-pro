@@ -34,7 +34,7 @@ const Tests = () => {
         </div>
         <BottomNav />
       </div>
-    </PremiumGate>
+    </>
   );
 };
 
