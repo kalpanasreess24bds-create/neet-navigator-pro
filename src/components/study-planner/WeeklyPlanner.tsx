@@ -20,6 +20,7 @@ interface WeeklyPlannerProps {
   onAdd: (d: Date, ch: PlannedChapter) => void;
   onToggle: (d: Date, chapterId: string) => void;
   onMoveToNext: (d: Date, chapterId: string) => void;
+  readOnly?: boolean;
 }
 
 const WeeklyPlanner = ({
