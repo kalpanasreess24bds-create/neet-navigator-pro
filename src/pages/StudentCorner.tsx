@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Sparkles, Heart, Wind, Gamepad2, Timer, StickyNote, Shield, SmilePlus, Zap,
+  Sparkles, Heart, Wind, Gamepad2, Timer, StickyNote, Shield, SmilePlus, Zap, Bell,
 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import MotivationBoost from "@/components/student-corner/MotivationBoost";
@@ -12,6 +12,7 @@ import PositiveWall from "@/components/student-corner/PositiveWall";
 import MoodTracker from "@/components/student-corner/MoodTracker";
 import StressSupport from "@/components/student-corner/StressSupport";
 import EmergencyMotivation from "@/components/student-corner/EmergencyMotivation";
+import NTAUpdates from "@/components/student-corner/NTAUpdates";
 
 type Section =
   | "motivation"
@@ -20,9 +21,11 @@ type Section =
   | "pomodoro"
   | "wall"
   | "mood"
-  | "stress";
+  | "stress"
+  | "nta";
 
 const sections: { id: Section; label: string; icon: React.ReactNode; emoji: string; gradient: string }[] = [
+  { id: "nta", label: "NTA Updates", icon: <Bell className="w-4 h-4" />, emoji: "📢", gradient: "from-blue-400 to-cyan-400" },
   { id: "motivation", label: "Motivation", icon: <Sparkles className="w-4 h-4" />, emoji: "✨", gradient: "from-amber-400 to-orange-400" },
   { id: "relax", label: "Relax", icon: <Wind className="w-4 h-4" />, emoji: "🧘", gradient: "from-sky-400 to-indigo-400" },
   { id: "brain", label: "Brain Break", icon: <Gamepad2 className="w-4 h-4" />, emoji: "🧠", gradient: "from-violet-400 to-purple-400" },
