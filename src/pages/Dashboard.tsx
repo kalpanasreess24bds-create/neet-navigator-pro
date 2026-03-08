@@ -65,6 +65,7 @@ const Dashboard = () => {
             >
               <Crown className="w-5 h-5 text-yellow-300" />
             </button>
+          </div>
         </motion.div>
 
         {/* Daily Progress */}
