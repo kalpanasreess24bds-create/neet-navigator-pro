@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Loader2, Sparkles, BookOpen, Layers, Zap, AlertCircle } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
-import PremiumGate from "@/components/PremiumGate";
+
 import SmartVideoPlayer from "@/components/smart-learning/SmartVideoPlayer";
 import SegmentList from "@/components/smart-learning/SegmentList";
 import TranscriptViewer from "@/components/smart-learning/TranscriptViewer";
