@@ -42,15 +42,25 @@ const Dashboard = () => {
           <div>
             <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
             <h1 className="text-2xl font-bold text-primary-foreground font-display">
-              {user.name || "Student"} 👋
+              {localUser.name || "Student"} 👋
             </h1>
           </div>
-          <button
-            onClick={() => navigate("/subscription")}
-            className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
-          >
-            <Crown className="w-5 h-5 text-yellow-300" />
-          </button>
+          <div className="flex items-center gap-2">
+            {isAdmin && (
+              <button
+                onClick={() => navigate("/neet-admin-x9k2")}
+                className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+              >
+                <Shield className="w-4 h-4 text-primary-foreground/70" />
+              </button>
+            )}
+            <button
+              onClick={() => navigate("/subscription")}
+              className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+            >
+              <Crown className="w-5 h-5 text-yellow-300" />
+            </button>
+          </div>
         </motion.div>
 
         {/* Daily Progress */}
