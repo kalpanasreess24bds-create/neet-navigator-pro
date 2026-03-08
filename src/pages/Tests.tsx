@@ -27,14 +27,14 @@ const Tests = () => {
   };
 
   return (
-    <>
+    <PremiumGate featureName="Full Test Series">
       <div className="min-h-screen bg-background pb-20">
         <div className="px-5 pt-12 pb-4">
           {renderContent()}
         </div>
         <BottomNav />
       </div>
-    </>
+    </PremiumGate>
   );
 };
 
