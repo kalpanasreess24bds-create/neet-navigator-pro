@@ -221,11 +221,11 @@ function usePlanStore(user: { id: string } | null, planType: PlanType) {
   const clearAllPlans = useCallback(
     async () => {
       if (!user) return;
-      const { error } = await supabase
+      const { error } = await (supabase
         .from("study_plans")
         .delete()
-        .eq("user_id", user.id)
-        .eq("plan_type" as any, planType);
+        .eq("user_id", user.id) as any)
+        .eq("plan_type", planType);
 
       if (error) {
         toast.error("Failed to clear plans");
