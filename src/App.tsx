@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Study from "./pages/Study";
+import SmartLearning from "./pages/SmartLearning";
 import Tests from "./pages/Tests";
 import Chat from "./pages/Chat";
 import Bookmarks from "./pages/Bookmarks";
