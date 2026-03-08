@@ -103,9 +103,9 @@ export const studyData: ClassData[] = [
         icon: "⚛️",
         color: "hsl(38 92% 55%)",
         chapters: [
-          { id: "p12-1", name: "Electric Charges and Fields", hasPdf: true, hasFlashcards: true, progress: 75 },
-          { id: "p12-2", name: "Electrostatic Potential", hasPdf: true, hasFlashcards: true, progress: 50 },
-          { id: "p12-3", name: "Current Electricity", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "p12-1", name: "Electric Charges and Fields", videoId: "VFbyDCG_j18", hasPdf: true, hasFlashcards: true, progress: 75 },
+          { id: "p12-2", name: "Electrostatic Potential", videoId: "ObHE27Mg10U", hasPdf: true, hasFlashcards: true, progress: 50 },
+          { id: "p12-3", name: "Current Electricity", videoId: "5DqfaYA8_Sc", hasPdf: true, hasFlashcards: true, progress: 0 },
         ],
       },
     ],
