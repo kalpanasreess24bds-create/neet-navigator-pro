@@ -6,6 +6,7 @@ import BottomNav from "@/components/BottomNav";
 import ProgressRing from "@/components/ProgressRing";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const recentlyWatched = [
   { title: "Cell: The Unit of Life", subject: "Biology", progress: 65, icon: "🧬" },
