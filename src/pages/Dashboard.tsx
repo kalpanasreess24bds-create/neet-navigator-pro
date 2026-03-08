@@ -24,11 +24,19 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="gradient-hero px-5 pt-12 pb-8 rounded-b-3xl">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
-          <h1 className="text-2xl font-bold text-primary-foreground font-display">
-            {user.name || "Student"} 👋
-          </h1>
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
+          <div>
+            <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
+            <h1 className="text-2xl font-bold text-primary-foreground font-display">
+              {user.name || "Student"} 👋
+            </h1>
+          </div>
+          <button
+            onClick={() => navigate("/subscription")}
+            className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+          >
+            <Crown className="w-5 h-5 text-yellow-300" />
+          </button>
         </motion.div>
 
         {/* Daily Progress */}
@@ -70,21 +78,6 @@ const Dashboard = () => {
           </div>
         </motion.button>
 
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          onClick={() => navigate("/subscription")}
-          className="w-full mt-3 rounded-2xl p-4 bg-accent flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md border border-border"
-        >
-          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-            <Crown className="w-5 h-5 text-primary" />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-semibold text-foreground">Go Premium</p>
-            <p className="text-xs text-muted-foreground">Unlock all features & tests</p>
-          </div>
-        </motion.button>
       </div>
 
       <div className="px-5 mt-6 space-y-6">
