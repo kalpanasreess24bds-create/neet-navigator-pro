@@ -86,6 +86,7 @@ const StudentCorner = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
         >
+          {activeSection === "nta" && <NTAUpdates />}
           {activeSection === "motivation" && <MotivationBoost />}
           {activeSection === "relax" && <RelaxationTools />}
           {activeSection === "brain" && <BrainBreak />}
