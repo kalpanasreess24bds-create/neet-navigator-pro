@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, FileText, Layers, Play, ArrowLeft } from "lucide-react";
+import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import VideoPlayer from "@/components/VideoPlayer";
+import MindMapViewer from "@/components/MindMapViewer";
 import { studyData, type ClassData, type Subject, type Chapter } from "@/data/studyContent";
+import { mindMapData } from "@/data/mindMapData";
 
 const Study = () => {
   const navigate = useNavigate();
