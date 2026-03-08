@@ -40,7 +40,7 @@ export const usePremium = () => {
       setLoading(false);
     };
 
-    checkSubscription();
+    checkAccess();
   }, [user]);
 
   return { isPremium, loading };
