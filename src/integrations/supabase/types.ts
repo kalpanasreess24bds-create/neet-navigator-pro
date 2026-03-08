@@ -62,6 +62,36 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          activated_at: string | null
+          amount: number
+          created_at: string
+          id: string
+          payment_reference: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          activated_at?: string | null
+          amount?: number
+          created_at?: string
+          id?: string
+          payment_reference?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          activated_at?: string | null
+          amount?: number
+          created_at?: string
+          id?: string
+          payment_reference?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
