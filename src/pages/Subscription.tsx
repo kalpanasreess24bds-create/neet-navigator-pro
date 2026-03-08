@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import BottomNav from "@/components/BottomNav";
 
-const UPI_ID = "yourname@upi";
+const UPI_ID = "kalpanasreess150920@oksbi";
 
 const plans = [
   {
