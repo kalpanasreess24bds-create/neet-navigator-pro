@@ -2,3 +2,6 @@ project_id = "qbdcixbwvrtzgahemfxy"
 
 [functions.analyze-video]
 verify_jwt = false
+
+[functions.admin-subscriptions]
+verify_jwt = false
