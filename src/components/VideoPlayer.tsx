@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Maximize2, Minimize2 } from "lucide-react";
+import { X, Maximize2, Minimize2, Upload } from "lucide-react";
 
 interface VideoPlayerProps {
-  videoId: string;
+  videoId?: string;
+  localVideoUrl?: string;
   title: string;
   onClose: () => void;
 }
 
-const VideoPlayer = ({ videoId, title, onClose }: VideoPlayerProps) => {
+const VideoPlayer = ({ videoId, localVideoUrl, title, onClose }: VideoPlayerProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   return (
@@ -57,17 +58,28 @@ const VideoPlayer = ({ videoId, title, onClose }: VideoPlayerProps) => {
             </div>
           </div>
 
-          {/* YouTube Embed */}
-          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-            <iframe
-              className="absolute inset-0 w-full h-full"
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
-              title={title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
-          </div>
+          {/* Video Content */}
+          {localVideoUrl ? (
+            <video
+              src={localVideoUrl}
+              controls
+              autoPlay
+              className="w-full aspect-video bg-foreground/5"
+            >
+              Your browser does not support the video tag.
+            </video>
+          ) : videoId ? (
+            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+                title={title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            </div>
+          ) : null}
 
           {/* Bottom safe area for mobile */}
           <div className="h-2 bg-card sm:hidden" />
