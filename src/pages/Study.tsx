@@ -8,11 +8,11 @@ import MindMapViewer from "@/components/MindMapViewer";
 import { studyData, type ClassData, type Subject } from "@/data/studyContent";
 import { mindMapData } from "@/data/mindMapData";
 import StudyPlannerSection from "@/components/study-planner/StudyPlannerSection";
-
+import { usePremium } from "@/hooks/usePremium";
 
 const Study = () => {
   const navigate = useNavigate();
-  
+  const { isPremium } = usePremium();
   const [viewMode, setViewMode] = useState<"chapters" | "planner">("chapters");
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
@@ -151,7 +151,7 @@ const Study = () => {
               className="space-y-3"
             >
               {selectedSubject.chapters.map((ch, i) => {
-                const isLocked = false;
+                const isLocked = !isPremium && i >= 3;
                 return (
                 <motion.div
                   key={ch.id}
