@@ -1,6 +1,6 @@
 import { useState } from "react";
 import BottomNav from "@/components/BottomNav";
-import PremiumGate from "@/components/PremiumGate";
+
 import TestDashboardHome from "@/components/test-dashboard/TestDashboardHome";
 import MockTestSection from "@/components/test-dashboard/MockTestSection";
 import WorksheetSection from "@/components/test-dashboard/WorksheetSection";
@@ -27,14 +27,14 @@ const Tests = () => {
   };
 
   return (
-    <PremiumGate featureName="Full Test Series">
+    <>
       <div className="min-h-screen bg-background pb-20">
         <div className="px-5 pt-12 pb-4">
           {renderContent()}
         </div>
         <BottomNav />
       </div>
-    </PremiumGate>
+    </>
   );
 };
 
