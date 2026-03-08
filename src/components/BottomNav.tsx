@@ -1,4 +1,4 @@
-import { Home, BookOpen, ClipboardList, MessageCircle, Bookmark } from "lucide-react";
+import { Home, BookOpen, ClipboardList, MessageCircle, Smile } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -6,7 +6,7 @@ const navItems = [
   { path: "/dashboard", icon: Home, label: "Home" },
   { path: "/study", icon: BookOpen, label: "Study" },
   { path: "/tests", icon: ClipboardList, label: "Tests" },
-  { path: "/bookmarks", icon: Bookmark, label: "Saved" },
+  { path: "/student-corner", icon: Smile, label: "Corner" },
   { path: "/chat", icon: MessageCircle, label: "Chat" },
 ];
 

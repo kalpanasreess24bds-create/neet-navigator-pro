@@ -11,7 +11,7 @@ import Study from "./pages/Study";
 import SmartLearning from "./pages/SmartLearning";
 import Tests from "./pages/Tests";
 import Chat from "./pages/Chat";
-import Bookmarks from "./pages/Bookmarks";
+import StudentCorner from "./pages/StudentCorner";
 import ProgressDashboard from "./pages/ProgressDashboard";
 import Auth from "./pages/Auth";
 import Subscription from "./pages/Subscription";
@@ -36,7 +36,8 @@ const App = () => (
             <Route path="/smart-learning" element={<SmartLearning />} />
             <Route path="/tests" element={<Tests />} />
             <Route path="/chat" element={<Chat />} />
-            <Route path="/bookmarks" element={<Bookmarks />} />
+            <Route path="/student-corner" element={<StudentCorner />} />
+            <Route path="/bookmarks" element={<StudentCorner />} />
             <Route path="/progress" element={<ProgressDashboard />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/neet-admin-x9k2" element={<AdminDashboard />} />
