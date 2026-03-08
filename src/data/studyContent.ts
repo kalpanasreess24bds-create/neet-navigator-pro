@@ -1,7 +1,7 @@
 export interface Chapter {
   id: string;
   name: string;
-  videoUrl?: string;
+  videoId?: string;
   hasPdf: boolean;
   hasFlashcards: boolean;
   progress: number;
