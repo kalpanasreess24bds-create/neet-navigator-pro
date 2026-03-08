@@ -1,5 +1,6 @@
 import { useState } from "react";
 import BottomNav from "@/components/BottomNav";
+import PremiumGate from "@/components/PremiumGate";
 import TestDashboardHome from "@/components/test-dashboard/TestDashboardHome";
 import MockTestSection from "@/components/test-dashboard/MockTestSection";
 import WorksheetSection from "@/components/test-dashboard/WorksheetSection";
