@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock, Award, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getFullTestQuestions } from "@/data/testQuestions";
+import { getMonthlyTestQuestions } from "@/data/testQuestions";
 import QuizEngine from "./QuizEngine";
 import TestResults from "./TestResults";
 import { TestQuestion, TestResult } from "@/types/testDashboard";
@@ -15,7 +15,7 @@ const MonthlyTestSection = ({ onBack }: { onBack: () => void }) => {
   const [results, setResults] = useState<TestResult[]>([]);
 
   const startTest = () => {
-    const qs = getFullTestQuestions(45);
+    const qs = getMonthlyTestQuestions(45);
     setQuestions(qs);
     setState("quiz");
   };
