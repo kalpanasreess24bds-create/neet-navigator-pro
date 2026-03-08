@@ -42,10 +42,10 @@ const Dashboard = () => {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="w-4 h-4 text-accent" />
-                <span className="text-xs font-semibold text-primary-foreground/80">Daily Progress</span>
+                <span className="text-xs font-semibold text-muted-foreground">Daily Progress</span>
               </div>
-              <p className="text-2xl font-bold text-primary-foreground font-display">42%</p>
-              <p className="text-xs text-primary-foreground/60 mt-0.5">3 of 7 tasks done today</p>
+              <p className="text-2xl font-bold text-card-foreground font-display">42%</p>
+              <p className="text-xs text-muted-foreground mt-0.5">3 of 7 tasks done today</p>
             </div>
             <ProgressRing progress={42} size={64} strokeWidth={5} />
           </div>
