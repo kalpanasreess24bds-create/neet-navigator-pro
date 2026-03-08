@@ -28,7 +28,12 @@ const Dashboard = () => {
   useEffect(() => {
     if (!authUser) return;
     const checkAdmin = async () => {
-      const { data } = await supabase.rpc("has_role", { _user_id: authUser.id, _role: "admin" });
+      const { data, error } = await supabase
+        .from("user_roles" as any)
+        .select("role")
+        .eq("user_id", authUser.id)
+        .eq("role", "admin")
+        .maybeSingle();
       setIsAdmin(!!data);
     };
     checkAdmin();
