@@ -25,6 +25,7 @@ const ProgressDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   return (
+    <PremiumGate featureName="Progress Analytics">
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="gradient-hero px-5 pt-12 pb-6 rounded-b-3xl">
