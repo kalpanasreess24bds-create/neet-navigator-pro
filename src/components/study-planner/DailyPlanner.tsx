@@ -19,6 +19,7 @@ interface DailyPlannerProps {
   onRemove: (chapterId: string) => void;
   onToggle: (chapterId: string) => void;
   onTimeSlot: (chapterId: string, slot: string) => void;
+  readOnly?: boolean;
 }
 
 const timeSlots = ["6:00 AM", "8:00 AM", "10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM", "8:00 PM", "10:00 PM"];
@@ -32,6 +33,7 @@ const DailyPlanner = ({
   onRemove,
   onToggle,
   onTimeSlot,
+  readOnly = false,
 }: DailyPlannerProps) => {
   const [showPicker, setShowPicker] = useState(false);
   const navigate = useNavigate();
@@ -128,41 +130,49 @@ const DailyPlanner = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  {ch.videoId && (
+                {!readOnly && (
+                  <div className="flex items-center gap-1 shrink-0">
+                    {ch.videoId && (
+                      <button
+                        onClick={() => navigate(`/smart-learning?v=${ch.videoId}&title=${encodeURIComponent(ch.chapterName)}`)}
+                        className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                      >
+                        <Play className="w-3.5 h-3.5 text-primary ml-0.5" />
+                      </button>
+                    )}
                     <button
-                      onClick={() => navigate(`/smart-learning?v=${ch.videoId}&title=${encodeURIComponent(ch.chapterName)}`)}
-                      className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                      onClick={() => onRemove(ch.chapterId)}
+                      className="w-7 h-7 rounded-lg bg-destructive/10 flex items-center justify-center hover:bg-destructive/20 transition-colors"
                     >
-                      <Play className="w-3.5 h-3.5 text-primary ml-0.5" />
+                      <Trash2 className="w-3.5 h-3.5 text-destructive" />
                     </button>
-                  )}
-                  <button
-                    onClick={() => onRemove(ch.chapterId)}
-                    className="w-7 h-7 rounded-lg bg-destructive/10 flex items-center justify-center hover:bg-destructive/20 transition-colors"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 text-destructive" />
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      {/* Add Button */}
-      <button
-        onClick={() => setShowPicker(true)}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/40 transition-colors text-sm font-medium text-muted-foreground hover:text-primary"
-      >
-        <Plus className="w-4 h-4" /> Add Chapter
-      </button>
+      {/* Add Button — only in manual mode */}
+      {!readOnly && (
+        <button
+          onClick={() => setShowPicker(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/40 transition-colors text-sm font-medium text-muted-foreground hover:text-primary"
+        >
+          <Plus className="w-4 h-4" /> Add Chapter
+        </button>
+      )}
 
       {/* Empty State */}
       {chapters.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-muted-foreground text-sm">No chapters planned for this day</p>
-          <p className="text-muted-foreground text-xs mt-1">Tap "Add Chapter" to start planning</p>
+          <p className="text-muted-foreground text-sm">
+            {readOnly ? "No chapters scheduled for this day" : "No chapters planned for this day"}
+          </p>
+          {!readOnly && (
+            <p className="text-muted-foreground text-xs mt-1">Tap "Add Chapter" to start planning</p>
+          )}
         </div>
       )}
 

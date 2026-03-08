@@ -15,6 +15,7 @@ interface MonthlyPlannerProps {
   getProgress: (chapters: PlannedChapter[]) => number;
   onAdd: (d: Date, ch: PlannedChapter) => void;
   onToggle?: (d: Date, chapterId: string) => void;
+  readOnly?: boolean;
 }
 
 const dayHeaders = ["M", "T", "W", "T", "F", "S", "S"];
@@ -26,6 +27,7 @@ const MonthlyPlanner = ({
   getProgress,
   onAdd,
   onToggle,
+  readOnly = false,
 }: MonthlyPlannerProps) => {
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [pickerDay, setPickerDay] = useState<Date | null>(null);
@@ -208,12 +210,14 @@ const MonthlyPlanner = ({
               <p className="text-sm font-display font-bold text-foreground">
                 {format(selectedDay, "EEEE, MMM d")}
               </p>
-              <button
-                onClick={() => setPickerDay(selectedDay)}
-                className="text-xs text-primary font-medium hover:underline"
-              >
-                + Add
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setPickerDay(selectedDay)}
+                  className="text-xs text-primary font-medium hover:underline"
+                >
+                  + Add
+                </button>
+              )}
             </div>
             {getChaptersForDate(selectedDay).length === 0 ? (
               <p className="text-xs text-muted-foreground py-2">No chapters planned</p>

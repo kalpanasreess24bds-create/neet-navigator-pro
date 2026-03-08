@@ -20,6 +20,7 @@ interface WeeklyPlannerProps {
   onAdd: (d: Date, ch: PlannedChapter) => void;
   onToggle: (d: Date, chapterId: string) => void;
   onMoveToNext: (d: Date, chapterId: string) => void;
+  readOnly?: boolean;
 }
 
 const WeeklyPlanner = ({
@@ -30,6 +31,7 @@ const WeeklyPlanner = ({
   onAdd,
   onToggle,
   onMoveToNext,
+  readOnly = false,
 }: WeeklyPlannerProps) => {
   const navigate = useNavigate();
   const [expandedDay, setExpandedDay] = useState<number | null>(null);
@@ -187,12 +189,14 @@ const WeeklyPlanner = ({
                         </div>
                       ))}
 
-                      <button
-                        onClick={() => setPickerDay(d)}
-                        className="w-full text-xs text-primary font-medium py-2 hover:underline"
-                      >
-                        + Add Chapter
-                      </button>
+                      {!readOnly && (
+                        <button
+                          onClick={() => setPickerDay(d)}
+                          className="w-full text-xs text-primary font-medium py-2 hover:underline"
+                        >
+                          + Add Chapter
+                        </button>
+                      )}
                     </div>
                   </motion.div>
                 )}

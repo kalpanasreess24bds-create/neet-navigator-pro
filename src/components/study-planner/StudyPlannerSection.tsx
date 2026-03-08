@@ -125,6 +125,7 @@ const StudyPlannerSection = () => {
                 onRemove={(id) => store.removeChapterFromDate(planner.selectedDate, id)}
                 onToggle={(id) => store.toggleComplete(planner.selectedDate, id)}
                 onTimeSlot={(id, slot) => store.updateTimeSlot(planner.selectedDate, id, slot)}
+                readOnly={planMode === "smart-plan"}
               />
             )}
             {activeTab === "weekly" && (
@@ -136,6 +137,7 @@ const StudyPlannerSection = () => {
                 onAdd={(d, ch) => store.addChapterToDate(d, ch)}
                 onToggle={(d, id) => store.toggleComplete(d, id)}
                 onMoveToNext={(d, id) => store.moveToNextDay(d, id)}
+                readOnly={planMode === "smart-plan"}
               />
             )}
             {activeTab === "monthly" && (
@@ -146,6 +148,7 @@ const StudyPlannerSection = () => {
                 getProgress={planner.getProgress}
                 onAdd={(d, ch) => store.addChapterToDate(d, ch)}
                 onToggle={(d, id) => store.toggleComplete(d, id)}
+                readOnly={planMode === "smart-plan"}
               />
             )}
           </motion.div>
