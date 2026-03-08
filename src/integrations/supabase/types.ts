@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      study_plans: {
+        Row: {
+          chapter_id: string
+          chapter_name: string
+          completed: boolean
+          created_at: string
+          id: string
+          plan_date: string
+          subject_color: string
+          subject_icon: string
+          subject_id: string
+          subject_name: string
+          time_slot: string | null
+          user_id: string
+          video_id: string | null
+        }
+        Insert: {
+          chapter_id: string
+          chapter_name: string
+          completed?: boolean
+          created_at?: string
+          id?: string
+          plan_date: string
+          subject_color: string
+          subject_icon: string
+          subject_id: string
+          subject_name: string
+          time_slot?: string | null
+          user_id: string
+          video_id?: string | null
+        }
+        Update: {
+          chapter_id?: string
+          chapter_name?: string
+          completed?: boolean
+          created_at?: string
+          id?: string
+          plan_date?: string
+          subject_color?: string
+          subject_icon?: string
+          subject_id?: string
+          subject_name?: string
+          time_slot?: string | null
+          user_id?: string
+          video_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
