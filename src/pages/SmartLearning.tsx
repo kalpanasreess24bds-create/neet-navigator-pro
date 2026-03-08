@@ -193,6 +193,7 @@ const SmartLearning = () => {
       <BreakReminder show={showBreak} onResume={handleResumeBreak} />
       <BottomNav />
     </div>
+    </PremiumGate>
   );
 };
 
