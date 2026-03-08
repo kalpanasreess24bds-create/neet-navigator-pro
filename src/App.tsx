@@ -11,7 +11,7 @@ import Study from "./pages/Study";
 import SmartLearning from "./pages/SmartLearning";
 import Tests from "./pages/Tests";
 import Chat from "./pages/Chat";
-import Bookmarks from "./pages/Bookmarks";
+import StudentCorner from "./pages/StudentCorner";
 import ProgressDashboard from "./pages/ProgressDashboard";
 import Auth from "./pages/Auth";
 import Subscription from "./pages/Subscription";
