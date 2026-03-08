@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network, Upload } from "lucide-react";
+import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -12,47 +12,12 @@ const Study = () => {
   const navigate = useNavigate();
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
-  const [activeVideo, setActiveVideo] = useState<{
-    videoId?: string;
-    localVideoUrl?: string;
-    title: string;
-  } | null>(null);
+  const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
   const [activeMindMap, setActiveMindMap] = useState<{ chapterId: string; title: string } | null>(null);
-  // Store uploaded video URLs by chapter id (in-memory, resets on refresh)
-  const [uploadedVideos, setUploadedVideos] = useState<Record<string, string>>({});
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadTargetChapter, setUploadTargetChapter] = useState<{ id: string; name: string } | null>(null);
 
   const handleBack = () => {
     if (selectedSubject) setSelectedSubject(null);
     else if (selectedClass) setSelectedClass(null);
-  };
-
-  const handleUploadClick = (chapterId: string, chapterName: string) => {
-    setUploadTargetChapter({ id: chapterId, name: chapterName });
-    fileInputRef.current?.click();
-  };
-
-  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !uploadTargetChapter) return;
-
-    const url = URL.createObjectURL(file);
-    setUploadedVideos((prev) => ({ ...prev, [uploadTargetChapter.id]: url }));
-    // Auto-play after upload
-    setActiveVideo({ localVideoUrl: url, title: uploadTargetChapter.name });
-    setUploadTargetChapter(null);
-    // Reset input so the same file can be re-selected
-    e.target.value = "";
-  };
-
-  const handlePlayVideo = (chapterId: string, chapterName: string, videoId?: string) => {
-    const localUrl = uploadedVideos[chapterId];
-    if (localUrl) {
-      setActiveVideo({ localVideoUrl: localUrl, title: chapterName });
-    } else if (videoId) {
-      setActiveVideo({ videoId, title: chapterName });
-    }
   };
 
   const title = selectedSubject
@@ -63,15 +28,6 @@ const Study = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Hidden file input for video uploads */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="video/*"
-        className="hidden"
-        onChange={handleFileSelected}
-      />
-
       {/* Header */}
       <div className="px-5 pt-12 pb-4 flex items-center gap-3">
         {(selectedClass || selectedSubject) && (
@@ -163,82 +119,69 @@ const Study = () => {
               exit={{ opacity: 0, x: -40 }}
               className="space-y-3"
             >
-              {selectedSubject.chapters.map((ch, i) => {
-                const hasUploadedVideo = !!uploadedVideos[ch.id];
-                return (
-                  <motion.div
-                    key={ch.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="elevated-card rounded-xl p-4"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"
-                        style={{
-                          backgroundColor: selectedSubject.color + "15",
-                          color: selectedSubject.color,
-                        }}
-                      >
-                        {i + 1}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-semibold text-sm text-card-foreground">{ch.name}</p>
-                        <div className="flex items-center gap-3 mt-2 flex-wrap">
-                          {/* Play video (uploaded or YouTube) */}
-                          {(hasUploadedVideo || ch.videoId) && (
-                            <button
-                              onClick={() => handlePlayVideo(ch.id, ch.name, ch.videoId)}
-                              className="flex items-center gap-1 text-xs text-primary font-medium hover:underline"
-                            >
-                              <Play className="w-3.5 h-3.5" />
-                              {hasUploadedVideo ? "My Video" : "Video"}
-                            </button>
-                          )}
-                          {/* Upload video button */}
+              {selectedSubject.chapters.map((ch, i) => (
+                <motion.div
+                  key={ch.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="elevated-card rounded-xl p-4"
+                >
+                  <div className="flex items-start gap-3">
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"
+                      style={{
+                        backgroundColor: selectedSubject.color + "15",
+                        color: selectedSubject.color,
+                      }}
+                    >
+                      {i + 1}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm text-card-foreground">{ch.name}</p>
+                      <div className="flex items-center gap-3 mt-2 flex-wrap">
+                        {ch.videoId && (
                           <button
-                            onClick={() => handleUploadClick(ch.id, ch.name)}
-                            className="flex items-center gap-1 text-xs text-accent font-medium hover:underline"
+                            onClick={() => setActiveVideo({ videoId: ch.videoId!, title: ch.name })}
+                            className="flex items-center gap-1 text-xs text-primary font-medium hover:underline"
                           >
-                            <Upload className="w-3.5 h-3.5" />
-                            {hasUploadedVideo ? "Replace" : "Upload"}
+                            <Play className="w-3.5 h-3.5" /> Video
                           </button>
-                          {ch.hasPdf && (
-                            <button className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
-                              <FileText className="w-3.5 h-3.5" /> Notes
-                            </button>
-                          )}
-                          {ch.hasFlashcards && (
-                            <button className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
-                              <Layers className="w-3.5 h-3.5" /> Cards
-                            </button>
-                          )}
-                          {mindMapData[ch.id] && (
-                            <button
-                              onClick={() => setActiveMindMap({ chapterId: ch.id, title: ch.name })}
-                              className="flex items-center gap-1 text-xs text-primary/70 font-medium hover:underline"
-                            >
-                              <Network className="w-3.5 h-3.5" /> Mind Map
-                            </button>
-                          )}
-                        </div>
-                        {ch.progress > 0 && (
-                          <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full transition-all"
-                              style={{
-                                width: `${ch.progress}%`,
-                                backgroundColor: selectedSubject.color,
-                              }}
-                            />
-                          </div>
+                        )}
+                        {ch.hasPdf && (
+                          <button className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
+                            <FileText className="w-3.5 h-3.5" /> Notes
+                          </button>
+                        )}
+                        {ch.hasFlashcards && (
+                          <button className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
+                            <Layers className="w-3.5 h-3.5" /> Cards
+                          </button>
+                        )}
+                        {mindMapData[ch.id] && (
+                          <button
+                            onClick={() => setActiveMindMap({ chapterId: ch.id, title: ch.name })}
+                            className="flex items-center gap-1 text-xs text-primary/70 font-medium hover:underline"
+                          >
+                            <Network className="w-3.5 h-3.5" /> Mind Map
+                          </button>
                         )}
                       </div>
+                      {ch.progress > 0 && (
+                        <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{
+                              width: `${ch.progress}%`,
+                              backgroundColor: selectedSubject.color,
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
-                  </motion.div>
-                );
-              })}
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
@@ -247,7 +190,6 @@ const Study = () => {
       {activeVideo && (
         <VideoPlayer
           videoId={activeVideo.videoId}
-          localVideoUrl={activeVideo.localVideoUrl}
           title={activeVideo.title}
           onClose={() => setActiveVideo(null)}
         />
