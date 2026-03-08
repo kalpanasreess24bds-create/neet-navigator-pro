@@ -1,10 +1,12 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, getDay, startOfWeek } from "date-fns";
-import { ChevronLeft, ChevronRight, BookOpen, Clock4, TrendingUp } from "lucide-react";
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from "date-fns";
+import { ChevronLeft, ChevronRight, BookOpen, Clock4, TrendingUp, ClipboardCheck } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import ChapterPicker from "./ChapterPicker";
+import AssessmentCard from "./AssessmentCard";
 import type { PlannedChapter } from "@/types/studyPlanner";
+import { isAssessment } from "@/types/studyPlanner";
 
 interface MonthlyPlannerProps {
   monthRef: Date;
@@ -12,6 +14,7 @@ interface MonthlyPlannerProps {
   getChaptersForDate: (d: Date) => PlannedChapter[];
   getProgress: (chapters: PlannedChapter[]) => number;
   onAdd: (d: Date, ch: PlannedChapter) => void;
+  onToggle?: (d: Date, chapterId: string) => void;
 }
 
 const dayHeaders = ["M", "T", "W", "T", "F", "S", "S"];
@@ -22,6 +25,7 @@ const MonthlyPlanner = ({
   getChaptersForDate,
   getProgress,
   onAdd,
+  onToggle,
 }: MonthlyPlannerProps) => {
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [pickerDay, setPickerDay] = useState<Date | null>(null);
@@ -30,29 +34,34 @@ const MonthlyPlanner = ({
   const monthEnd = endOfMonth(monthRef);
   const allDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
-  // Offset for first day (Mon=0 based)
   const firstDayOffset = (getDay(monthStart) + 6) % 7;
 
-  // Stats
   const stats = useMemo(() => {
     let totalChapters = 0;
     let completed = 0;
+    let assessmentCount = 0;
+    let assessmentDone = 0;
     const subjectMap: Record<string, { total: number; done: number; color: string; icon: string }> = {};
 
     allDays.forEach((d) => {
       const chs = getChaptersForDate(d);
       chs.forEach((ch) => {
-        totalChapters++;
-        if (ch.completed) completed++;
-        if (!subjectMap[ch.subjectName]) {
-          subjectMap[ch.subjectName] = { total: 0, done: 0, color: ch.subjectColor, icon: ch.subjectIcon };
+        if (isAssessment(ch)) {
+          assessmentCount++;
+          if (ch.completed) assessmentDone++;
+        } else {
+          totalChapters++;
+          if (ch.completed) completed++;
+          if (!subjectMap[ch.subjectName]) {
+            subjectMap[ch.subjectName] = { total: 0, done: 0, color: ch.subjectColor, icon: ch.subjectIcon };
+          }
+          subjectMap[ch.subjectName].total++;
+          if (ch.completed) subjectMap[ch.subjectName].done++;
         }
-        subjectMap[ch.subjectName].total++;
-        if (ch.completed) subjectMap[ch.subjectName].done++;
       });
     });
 
-    return { totalChapters, completed, subjects: subjectMap };
+    return { totalChapters, completed, assessmentCount, assessmentDone, subjects: subjectMap };
   }, [allDays, getChaptersForDate]);
 
   const todayStr = format(new Date(), "yyyy-MM-dd");
@@ -71,16 +80,21 @@ const MonthlyPlanner = ({
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         <div className="elevated-card rounded-xl p-3 text-center">
           <BookOpen className="w-4 h-4 mx-auto text-primary mb-1" />
           <p className="text-lg font-bold text-foreground font-display">{stats.completed}</p>
-          <p className="text-[9px] text-muted-foreground">Completed</p>
+          <p className="text-[9px] text-muted-foreground">Done</p>
         </div>
         <div className="elevated-card rounded-xl p-3 text-center">
           <TrendingUp className="w-4 h-4 mx-auto text-primary mb-1" />
           <p className="text-lg font-bold text-foreground font-display">{stats.totalChapters}</p>
           <p className="text-[9px] text-muted-foreground">Planned</p>
+        </div>
+        <div className="elevated-card rounded-xl p-3 text-center">
+          <ClipboardCheck className="w-4 h-4 mx-auto text-accent-foreground mb-1" />
+          <p className="text-lg font-bold text-foreground font-display">{stats.assessmentCount}</p>
+          <p className="text-[9px] text-muted-foreground">Tests</p>
         </div>
         <div className="elevated-card rounded-xl p-3 text-center">
           <Clock4 className="w-4 h-4 mx-auto text-primary mb-1" />
@@ -134,6 +148,7 @@ const MonthlyPlanner = ({
             const isSelected = selectedDay && format(d, "yyyy-MM-dd") === format(selectedDay, "yyyy-MM-dd");
             const hasChapters = chapters.length > 0;
             const allDone = hasChapters && chapters.every((c) => c.completed);
+            const hasAssessmentDay = chapters.some((c) => isAssessment(c));
 
             return (
               <button
@@ -142,18 +157,41 @@ const MonthlyPlanner = ({
                 className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs relative transition-colors ${
                   isSelected
                     ? "bg-primary text-primary-foreground"
+                    : hasAssessmentDay
+                    ? "bg-accent/10 text-accent-foreground font-bold"
                     : isToday
                     ? "bg-primary/10 text-primary font-bold"
                     : "hover:bg-secondary text-foreground"
                 }`}
               >
                 {format(d, "d")}
-                {hasChapters && (
-                  <div className={`w-1.5 h-1.5 rounded-full mt-0.5 ${allDone ? "bg-green-500" : isSelected ? "bg-primary-foreground" : "bg-primary"}`} />
-                )}
+                <div className="flex gap-0.5 mt-0.5">
+                  {hasChapters && !hasAssessmentDay && (
+                    <div className={`w-1.5 h-1.5 rounded-full ${allDone ? "bg-green-500" : isSelected ? "bg-primary-foreground" : "bg-primary"}`} />
+                  )}
+                  {hasAssessmentDay && (
+                    <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? "bg-primary-foreground" : "bg-accent"}`} />
+                  )}
+                </div>
               </button>
             );
           })}
+        </div>
+
+        {/* Legend */}
+        <div className="flex items-center gap-4 mt-3 pt-2 border-t border-border">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-primary" />
+            <span className="text-[9px] text-muted-foreground">Study</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-accent" />
+            <span className="text-[9px] text-muted-foreground">Assessment</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-[9px] text-muted-foreground">Completed</span>
+          </div>
         </div>
       </div>
 
@@ -180,17 +218,34 @@ const MonthlyPlanner = ({
             {getChaptersForDate(selectedDay).length === 0 ? (
               <p className="text-xs text-muted-foreground py-2">No chapters planned</p>
             ) : (
-              getChaptersForDate(selectedDay).map((ch) => (
-                <div key={ch.id} className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
-                  <span className="text-sm">{ch.subjectIcon}</span>
-                  <p className={`text-xs flex-1 text-card-foreground ${ch.completed ? "line-through opacity-50" : ""}`}>
-                    {ch.chapterName}
-                  </p>
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${ch.completed ? "bg-green-500/10 text-green-600" : "bg-accent/10 text-accent-foreground"}`}>
-                    {ch.completed ? "Done" : "Pending"}
-                  </span>
-                </div>
-              ))
+              <>
+                {/* Assessment items */}
+                {getChaptersForDate(selectedDay)
+                  .filter((ch) => isAssessment(ch))
+                  .map((ch) => (
+                    <AssessmentCard
+                      key={ch.id}
+                      chapter={ch}
+                      onToggle={() => onToggle?.(selectedDay, ch.chapterId)}
+                      compact
+                    />
+                  ))}
+
+                {/* Study items */}
+                {getChaptersForDate(selectedDay)
+                  .filter((ch) => !isAssessment(ch))
+                  .map((ch) => (
+                    <div key={ch.id} className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
+                      <span className="text-sm">{ch.subjectIcon}</span>
+                      <p className={`text-xs flex-1 text-card-foreground ${ch.completed ? "line-through opacity-50" : ""}`}>
+                        {ch.chapterName}
+                      </p>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${ch.completed ? "bg-green-500/10 text-green-600" : "bg-accent/10 text-accent-foreground"}`}>
+                        {ch.completed ? "Done" : "Pending"}
+                      </span>
+                    </div>
+                  ))}
+              </>
             )}
           </motion.div>
         )}
