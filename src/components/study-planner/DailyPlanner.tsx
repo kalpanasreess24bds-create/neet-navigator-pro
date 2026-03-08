@@ -130,22 +130,24 @@ const DailyPlanner = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  {ch.videoId && (
+                {!readOnly && (
+                  <div className="flex items-center gap-1 shrink-0">
+                    {ch.videoId && (
+                      <button
+                        onClick={() => navigate(`/smart-learning?v=${ch.videoId}&title=${encodeURIComponent(ch.chapterName)}`)}
+                        className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                      >
+                        <Play className="w-3.5 h-3.5 text-primary ml-0.5" />
+                      </button>
+                    )}
                     <button
-                      onClick={() => navigate(`/smart-learning?v=${ch.videoId}&title=${encodeURIComponent(ch.chapterName)}`)}
-                      className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                      onClick={() => onRemove(ch.chapterId)}
+                      className="w-7 h-7 rounded-lg bg-destructive/10 flex items-center justify-center hover:bg-destructive/20 transition-colors"
                     >
-                      <Play className="w-3.5 h-3.5 text-primary ml-0.5" />
+                      <Trash2 className="w-3.5 h-3.5 text-destructive" />
                     </button>
-                  )}
-                  <button
-                    onClick={() => onRemove(ch.chapterId)}
-                    className="w-7 h-7 rounded-lg bg-destructive/10 flex items-center justify-center hover:bg-destructive/20 transition-colors"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 text-destructive" />
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
