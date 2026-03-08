@@ -13,7 +13,7 @@ import BottomNav from "@/components/BottomNav";
 
 const UPI_ID = "aaruthreshrk@okaxis";
 const AMOUNT = 79;
-const UPI_DEEP_LINK = `upi://pay?pa=${UPI_ID}&pn=NEET%20Navigator&am=${AMOUNT}&cu=INR&tn=Premium%20Subscription`;
+const UPI_DEEP_LINK = `upi://pay?pa=${UPI_ID}&pn=NEET%20Navigator&am=${AMOUNT}&cu=INR&tn=Premium%20Monthly%20Subscription`;
 
 const premiumFeatures = [
   { icon: BookOpen, text: "All subjects — Bio, Phys, Chem", detail: "Class 11 & 12 full access" },
@@ -186,17 +186,17 @@ const Subscription = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <Card className="p-5 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 ring-2 ring-primary/20 text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-bold px-3 py-1 rounded-bl-xl">
-              BEST VALUE
+              MONTHLY
             </div>
             <div className="flex items-center justify-center gap-2 mb-2 mt-1">
               <Star className="w-5 h-5 text-primary fill-primary" />
-              <span className="text-sm font-semibold text-primary">Lifetime Premium</span>
+              <span className="text-sm font-semibold text-primary">Premium Plan</span>
             </div>
             <div className="flex items-baseline justify-center gap-1 mb-1">
-              <span className="text-sm text-muted-foreground line-through">₹299</span>
               <span className="text-4xl font-bold text-primary">₹{AMOUNT}</span>
+              <span className="text-sm text-muted-foreground">/month</span>
             </div>
-            <p className="text-xs text-muted-foreground">One-time payment • Full access forever</p>
+            <p className="text-xs text-muted-foreground">Cancel anytime • Full access to all features</p>
           </Card>
         </motion.div>
 
