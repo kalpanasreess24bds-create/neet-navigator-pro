@@ -73,7 +73,7 @@ const ProgressDashboard = () => {
 
       <BottomNav />
     </div>
-    </>
+    </PremiumGate>
   );
 };
 
