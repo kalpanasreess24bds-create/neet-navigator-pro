@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network, Sparkles } from "lucide-react";
+import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network, Sparkles, BookOpen, CalendarDays } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import VideoPlayer from "@/components/VideoPlayer";
 import MindMapViewer from "@/components/MindMapViewer";
 import { studyData, type ClassData, type Subject } from "@/data/studyContent";
 import { mindMapData } from "@/data/mindMapData";
+import StudyPlannerSection from "@/components/study-planner/StudyPlannerSection";
 
 const Study = () => {
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<"chapters" | "planner">("chapters");
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
@@ -20,7 +22,9 @@ const Study = () => {
     else if (selectedClass) setSelectedClass(null);
   };
 
-  const title = selectedSubject
+  const title = viewMode === "planner"
+    ? "Study Planner"
+    : selectedSubject
     ? selectedSubject.name
     : selectedClass
     ? selectedClass.name
@@ -30,15 +34,40 @@ const Study = () => {
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="px-5 pt-12 pb-4 flex items-center gap-3">
-        {(selectedClass || selectedSubject) && (
+        {viewMode === "chapters" && (selectedClass || selectedSubject) && (
           <button onClick={handleBack} className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
             <ArrowLeft className="w-4 h-4 text-foreground" />
           </button>
         )}
-        <h1 className="text-xl font-bold font-display text-foreground">{title}</h1>
+        <h1 className="text-xl font-bold font-display text-foreground flex-1">{title}</h1>
+      </div>
+
+      {/* View Mode Toggle */}
+      <div className="px-5 mb-4">
+        <div className="flex gap-1 p-1 bg-secondary rounded-xl">
+          <button
+            onClick={() => setViewMode("chapters")}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-medium transition-all ${
+              viewMode === "chapters" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" /> Chapters
+          </button>
+          <button
+            onClick={() => setViewMode("planner")}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-medium transition-all ${
+              viewMode === "planner" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+            }`}
+          >
+            <CalendarDays className="w-3.5 h-3.5" /> Planner
+          </button>
+        </div>
       </div>
 
       <div className="px-5">
+        {viewMode === "planner" ? (
+          <StudyPlannerSection />
+        ) : (
         <AnimatePresence mode="wait">
           {/* Class Selection */}
           {!selectedClass && (
@@ -193,6 +222,7 @@ const Study = () => {
             </motion.div>
           )}
         </AnimatePresence>
+        )}
       </div>
 
       {activeVideo && (
