@@ -59,9 +59,9 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
           onClick={() => navigate("/progress")}
-          className="w-full glass-card rounded-2xl p-4 bg-card/10 backdrop-blur-xl border-primary-foreground/10 flex items-center gap-3 hover:scale-[1.01] transition-transform"
+          className="w-full rounded-2xl p-4 bg-primary flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md"
         >
-          <div className="w-10 h-10 rounded-xl bg-primary-foreground/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
             <BarChart3 className="w-5 h-5 text-primary-foreground" />
           </div>
           <div className="text-left">
