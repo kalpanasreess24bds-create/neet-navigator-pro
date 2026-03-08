@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Study from "./pages/Study";
+import SmartLearning from "./pages/SmartLearning";
 import Tests from "./pages/Tests";
 import Chat from "./pages/Chat";
 import Bookmarks from "./pages/Bookmarks";
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/study" element={<Study />} />
+          <Route path="/smart-learning" element={<SmartLearning />} />
           <Route path="/tests" element={<Tests />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/bookmarks" element={<Bookmarks />} />

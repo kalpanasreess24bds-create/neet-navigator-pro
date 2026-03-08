@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network } from "lucide-react";
+import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -146,6 +146,14 @@ const Study = () => {
                             className="flex items-center gap-1 text-xs text-primary font-medium hover:underline"
                           >
                             <Play className="w-3.5 h-3.5" /> Video
+                          </button>
+                        )}
+                        {ch.videoId && (
+                          <button
+                            onClick={() => navigate(`/smart-learning?v=${ch.videoId}&title=${encodeURIComponent(ch.name)}`)}
+                            className="flex items-center gap-1 text-xs text-accent-foreground font-medium hover:underline"
+                          >
+                            <Sparkles className="w-3.5 h-3.5" /> Smart Learn
                           </button>
                         )}
                         {ch.hasPdf && (
