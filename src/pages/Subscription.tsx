@@ -13,6 +13,7 @@ import BottomNav from "@/components/BottomNav";
 
 const UPI_ID = "aaruthreshrk@okaxis";
 const AMOUNT = 79;
+const UPI_QR_LINK = `upi://pay?pa=${UPI_ID}&pn=NEET%20Navigator&cu=INR&tn=Premium%20Monthly%20Subscription`;
 const UPI_DEEP_LINK = `upi://pay?pa=${UPI_ID}&pn=NEET%20Navigator&am=${AMOUNT}&cu=INR&tn=Premium%20Monthly%20Subscription`;
 
 const premiumFeatures = [
@@ -246,13 +247,16 @@ const Subscription = () => {
               <p className="text-xs text-muted-foreground mt-1">
                 Use Google Pay, PhonePe, Paytm or any UPI app
               </p>
+              <p className="text-xs font-medium text-primary mt-1">
+                ⚠️ Enter ₹{AMOUNT} manually after scanning
+              </p>
             </div>
 
-            {/* QR Code */}
+            {/* QR Code - without amount to avoid UPI app restrictions */}
             <div className="flex justify-center">
               <div className="bg-white p-4 rounded-2xl shadow-md border border-border/20">
                 <QRCodeSVG
-                  value={UPI_DEEP_LINK}
+                  value={UPI_QR_LINK}
                   size={180}
                   level="H"
                   includeMargin={false}
