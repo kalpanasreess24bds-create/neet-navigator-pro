@@ -1,8 +1,11 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown } from "lucide-react";
+import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import ProgressRing from "@/components/ProgressRing";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const recentlyWatched = [
   { title: "Cell: The Unit of Life", subject: "Biology", progress: 65, icon: "🧬" },
