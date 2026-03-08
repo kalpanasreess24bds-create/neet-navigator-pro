@@ -32,8 +32,8 @@ export const studyData: ClassData[] = [
         icon: "🧬",
         color: "hsl(152 60% 45%)",
         chapters: [
-          { id: "b11-1", name: "The Living World", videoId: "FMelDCSFCPk", hasPdf: true, hasFlashcards: true, progress: 80 },
-          { id: "b11-2", name: "Biological Classification", videoId: "tJGeFFXOaOE", hasPdf: true, hasFlashcards: true, progress: 60 },
+          { id: "b11-1", name: "The Living World", videoId: "XxGA5oDakfE", hasPdf: true, hasFlashcards: true, progress: 80 },
+          { id: "b11-2", name: "Biological Classification", videoId: "Lsrc3RsmRR4", hasPdf: true, hasFlashcards: true, progress: 60 },
           { id: "b11-3", name: "Plant Kingdom", videoId: "dK3cSQ-bUOk", hasPdf: true, hasFlashcards: false, progress: 30 },
           { id: "b11-4", name: "Animal Kingdom", videoId: "oZ2K8s-EDWI", hasPdf: true, hasFlashcards: true, progress: 0 },
           { id: "b11-5", name: "Morphology of Flowering Plants", videoId: "uJGNw9q7Y0k", hasPdf: true, hasFlashcards: true, progress: 45 },
