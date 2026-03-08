@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Crown, Check, ArrowLeft, Star, Zap, BookOpen, ClipboardList, Upload, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Crown, ArrowLeft, Star, Zap, BookOpen, ClipboardList, Loader2, CheckCircle2, Copy, Smartphone, QrCode, CircleDot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
@@ -16,10 +16,16 @@ const AMOUNT = 79;
 const UPI_DEEP_LINK = `upi://pay?pa=${UPI_ID}&pn=NEET%20Navigator&am=${AMOUNT}&cu=INR&tn=Premium%20Subscription`;
 
 const premiumFeatures = [
-  { icon: BookOpen, text: "All subjects — Bio, Phys, Chem" },
-  { icon: ClipboardList, text: "Full mock test series" },
-  { icon: Zap, text: "AI-powered Smart Learning" },
-  { icon: Crown, text: "Detailed performance analytics" },
+  { icon: BookOpen, text: "All subjects — Bio, Phys, Chem", detail: "Class 11 & 12 full access" },
+  { icon: ClipboardList, text: "Full mock test series", detail: "Weekly, monthly & grand tests" },
+  { icon: Zap, text: "AI-powered Smart Learning", detail: "Video analysis & revision tools" },
+  { icon: Crown, text: "Detailed performance analytics", detail: "Track your NEET journey" },
+];
+
+const steps = [
+  { num: 1, label: "Scan QR or copy UPI ID", icon: QrCode },
+  { num: 2, label: "Pay ₹79 using any UPI app", icon: Smartphone },
+  { num: 3, label: "Tap 'I've Paid' below", icon: CheckCircle2 },
 ];
 
 const Subscription = () => {
@@ -27,6 +33,15 @@ const Subscription = () => {
   const { user } = useAuth();
   const { isPremium, loading: premiumLoading } = usePremium();
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyUPI = () => {
+    navigator.clipboard.writeText(UPI_ID);
+    setCopied(true);
+    toast({ title: "Copied!", description: "UPI ID copied to clipboard" });
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handlePaymentDone = async () => {
     if (!user) {
@@ -48,14 +63,11 @@ const Subscription = () => {
     if (error) {
       toast({ title: "Error", description: "Could not submit payment. Try again." });
     } else {
-      toast({
-        title: "Payment submitted!",
-        description: "Your premium access will be activated after verification (within 24 hours).",
-      });
+      setSubmitted(true);
     }
   };
 
-  // If already premium, show premium dashboard
+  // Premium active view
   if (!premiumLoading && isPremium) {
     return (
       <div className="min-h-screen bg-background pb-24">
@@ -76,7 +88,6 @@ const Subscription = () => {
             </div>
           </motion.div>
         </div>
-
         <div className="px-5 mt-6 space-y-4">
           {[
             { label: "All Subjects", desc: "Biology, Physics, Chemistry — full access", icon: "🧬", path: "/study" },
@@ -101,7 +112,49 @@ const Subscription = () => {
             </motion.button>
           ))}
         </div>
+        <BottomNav />
+      </div>
+    );
+  }
 
+  // Success state after submitting payment
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-background pb-24 flex flex-col">
+        <div className="gradient-hero px-5 pt-12 pb-8 rounded-b-3xl">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+            <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-primary-foreground/70 mb-4">
+              <ArrowLeft className="w-5 h-5" />
+              <span className="text-sm">Back</span>
+            </button>
+          </motion.div>
+        </div>
+        <div className="flex-1 flex items-center justify-center px-5">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center space-y-4 max-w-sm"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", delay: 0.2 }}
+              className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto"
+            >
+              <CheckCircle2 className="w-10 h-10 text-green-500" />
+            </motion.div>
+            <h2 className="text-xl font-bold text-foreground font-display">Payment Submitted! 🎉</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Your payment is being verified. Premium access will be activated within <strong className="text-foreground">24 hours</strong>.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              You'll get full access to all subjects, tests & smart learning features once verified.
+            </p>
+            <Button onClick={() => navigate("/")} className="w-full mt-4">
+              Back to Dashboard
+            </Button>
+          </motion.div>
+        </div>
         <BottomNav />
       </div>
     );
@@ -110,7 +163,7 @@ const Subscription = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
-      <div className="gradient-hero px-5 pt-12 pb-8 rounded-b-3xl">
+      <div className="gradient-hero px-5 pt-12 pb-10 rounded-b-3xl">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-primary-foreground/70 mb-4">
             <ArrowLeft className="w-5 h-5" />
@@ -128,87 +181,136 @@ const Subscription = () => {
         </motion.div>
       </div>
 
-      <div className="px-5 -mt-4 space-y-6">
+      <div className="px-5 -mt-6 space-y-5">
         {/* Price Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <Card className="p-6 border-primary bg-primary/5 ring-2 ring-primary/20 text-center">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Star className="w-5 h-5 text-primary" />
-              <span className="text-sm font-semibold text-primary">Premium Plan</span>
+          <Card className="p-5 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 ring-2 ring-primary/20 text-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-bold px-3 py-1 rounded-bl-xl">
+              BEST VALUE
+            </div>
+            <div className="flex items-center justify-center gap-2 mb-2 mt-1">
+              <Star className="w-5 h-5 text-primary fill-primary" />
+              <span className="text-sm font-semibold text-primary">Lifetime Premium</span>
             </div>
             <div className="flex items-baseline justify-center gap-1 mb-1">
+              <span className="text-sm text-muted-foreground line-through">₹299</span>
               <span className="text-4xl font-bold text-primary">₹{AMOUNT}</span>
-              <span className="text-sm text-muted-foreground">/lifetime</span>
             </div>
-            <p className="text-xs text-muted-foreground">One-time payment, full access forever</p>
+            <p className="text-xs text-muted-foreground">One-time payment • Full access forever</p>
           </Card>
         </motion.div>
 
         {/* Features */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <Card className="p-5 bg-card border-border/50">
-            <h3 className="font-semibold text-foreground mb-3">What you get</h3>
-            <ul className="space-y-2.5">
+          <Card className="p-4 bg-card border-border/50">
+            <h3 className="font-semibold text-foreground mb-3 text-sm">What you unlock</h3>
+            <div className="grid grid-cols-2 gap-3">
               {premiumFeatures.map((f, i) => (
-                <li key={i} className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <f.icon className="w-4 h-4 text-primary" />
+                <div key={i} className="flex flex-col items-center text-center p-3 rounded-xl bg-muted/30 border border-border/30">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-2">
+                    <f.icon className="w-5 h-5 text-primary" />
                   </div>
-                  {f.text}
-                </li>
+                  <p className="text-xs font-medium text-foreground leading-tight">{f.text}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{f.detail}</p>
+                </div>
               ))}
-            </ul>
+            </div>
           </Card>
         </motion.div>
 
-        {/* QR Code Payment */}
+        {/* How to Pay - Step by Step */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <Card className="p-4 bg-card border-border/50">
+            <h3 className="font-semibold text-foreground mb-3 text-sm">How to pay — 3 easy steps</h3>
+            <div className="space-y-3">
+              {steps.map((step, i) => (
+                <div key={step.num} className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center shrink-0">
+                    <span className="text-xs font-bold text-primary">{step.num}</span>
+                  </div>
+                  <div className="flex items-center gap-2 flex-1">
+                    <step.icon className="w-4 h-4 text-muted-foreground shrink-0" />
+                    <span className="text-sm text-foreground">{step.label}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* QR Code & Payment */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-          <Card className="p-5 bg-card border-border/50">
-            <h3 className="font-semibold text-foreground mb-2 text-center">Scan & Pay ₹{AMOUNT}</h3>
-            <p className="text-xs text-muted-foreground text-center mb-4">
-              Scan the QR code below using any UPI app
-            </p>
-            <div className="flex justify-center mb-4">
-              <div className="bg-white p-4 rounded-2xl shadow-sm">
+          <Card className="p-5 bg-card border-border/50 space-y-4">
+            <div className="text-center">
+              <h3 className="font-semibold text-foreground text-base">Scan & Pay ₹{AMOUNT}</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                Use Google Pay, PhonePe, Paytm or any UPI app
+              </p>
+            </div>
+
+            {/* QR Code */}
+            <div className="flex justify-center">
+              <div className="bg-white p-4 rounded-2xl shadow-md border border-border/20">
                 <QRCodeSVG
                   value={UPI_DEEP_LINK}
-                  size={200}
+                  size={180}
                   level="H"
                   includeMargin={false}
                 />
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border mb-4">
-              <div className="flex-1">
-                <p className="text-xs text-muted-foreground mb-0.5">UPI ID</p>
-                <p className="font-mono font-semibold text-foreground text-sm">{UPI_ID}</p>
+
+            {/* UPI ID with copy */}
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border">
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">UPI ID</p>
+                <p className="font-mono font-semibold text-foreground text-sm truncate">{UPI_ID}</p>
               </div>
               <Button
                 size="sm"
-                variant="outline"
-                onClick={() => {
-                  navigator.clipboard.writeText(UPI_ID);
-                  toast({ title: "Copied!", description: "UPI ID copied to clipboard" });
-                }}
+                variant={copied ? "default" : "outline"}
+                onClick={handleCopyUPI}
+                className="shrink-0 gap-1.5"
               >
-                Copy
+                {copied ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? "Copied" : "Copy"}
               </Button>
             </div>
 
+            {/* Pay on mobile button */}
+            <a
+              href={UPI_DEEP_LINK}
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-muted/50 border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
+            >
+              <Smartphone className="w-4 h-4" />
+              Open UPI App on this device
+            </a>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-card px-3 text-xs text-muted-foreground">After payment</span>
+              </div>
+            </div>
+
+            {/* Confirm button */}
             <Button
-              className="w-full"
+              className="w-full h-12 text-base font-semibold gap-2"
               onClick={handlePaymentDone}
               disabled={submitting}
             >
               {submitting ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
-                <Upload className="w-4 h-4 mr-2" />
+                <CheckCircle2 className="w-5 h-5" />
               )}
-              I've Completed Payment
+              {submitting ? "Submitting..." : "I've Paid ₹79"}
             </Button>
-            <p className="text-xs text-muted-foreground mt-3 text-center">
-              After clicking, your premium access will be activated within 24 hours after verification.
+            <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+              Premium activates within <strong>24 hours</strong> after we verify your payment. No extra charges.
             </p>
           </Card>
         </motion.div>
