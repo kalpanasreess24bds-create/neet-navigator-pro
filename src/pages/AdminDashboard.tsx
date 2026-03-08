@@ -39,9 +39,7 @@ const AdminDashboard = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
-      const res = await supabase.functions.invoke("admin-subscriptions", {
-        method: "GET",
-      });
+      const res = await supabase.functions.invoke("admin-subscriptions");
 
       if (res.error) throw res.error;
       if (res.data?.error === "Forbidden: admin only") {
@@ -67,7 +65,6 @@ const AdminDashboard = () => {
     setUpdating(id);
     try {
       const res = await supabase.functions.invoke("admin-subscriptions", {
-        method: "PATCH",
         body: { id, status },
       });
       if (res.error) throw res.error;
