@@ -78,6 +78,7 @@ const SmartLearning = () => {
   ];
 
   return (
+    <PremiumGate featureName="Smart Learning">
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="px-4 pt-10 pb-3 flex items-center gap-3">
