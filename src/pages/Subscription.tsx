@@ -13,7 +13,7 @@ import BottomNav from "@/components/BottomNav";
 
 const UPI_ID = "aaruthreshrk@okaxis";
 const AMOUNT = 79;
-const UPI_DEEP_LINK = `upi://pay?pa=${UPI_ID}&pn=NEET%20Navigator&am=${AMOUNT}&cu=INR&tn=Premium%20Subscription`;
+const UPI_DEEP_LINK = `upi://pay?pa=${UPI_ID}&pn=NEET%20Navigator&am=${AMOUNT}&cu=INR&tn=Premium%20Monthly%20Subscription`;
 
 const premiumFeatures = [
   { icon: BookOpen, text: "All subjects — Bio, Phys, Chem", detail: "Class 11 & 12 full access" },
