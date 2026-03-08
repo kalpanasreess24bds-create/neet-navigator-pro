@@ -65,7 +65,6 @@ const AdminDashboard = () => {
     setUpdating(id);
     try {
       const res = await supabase.functions.invoke("admin-subscriptions", {
-        method: "PATCH",
         body: { id, status },
       });
       if (res.error) throw res.error;
