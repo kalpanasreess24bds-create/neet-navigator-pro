@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock, Zap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getFullTestQuestions } from "@/data/testQuestions";
+import { getWeeklyTestQuestions } from "@/data/testQuestions";
 import QuizEngine from "./QuizEngine";
 import TestResults from "./TestResults";
 import { TestQuestion, TestResult } from "@/types/testDashboard";
