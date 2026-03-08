@@ -11,6 +11,7 @@ import StudyPlannerSection from "@/components/study-planner/StudyPlannerSection"
 
 const Study = () => {
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<"chapters" | "planner">("chapters");
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
