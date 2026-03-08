@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown, Shield } from "lucide-react";
+import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown, Shield, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import ProgressRing from "@/components/ProgressRing";
@@ -21,7 +21,7 @@ const quickActions = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user: authUser } = useAuth();
+  const { user: authUser, signOut } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const localUser = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
 
@@ -64,6 +64,16 @@ const Dashboard = () => {
               className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
             >
               <Crown className="w-5 h-5 text-yellow-300" />
+            </button>
+            <button
+              onClick={async () => {
+                await signOut();
+                localStorage.removeItem("neet-user");
+                navigate("/auth");
+              }}
+              className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+            >
+              <LogOut className="w-4 h-4 text-primary-foreground/70" />
             </button>
           </div>
         </motion.div>
