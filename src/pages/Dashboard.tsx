@@ -36,7 +36,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-5 glass-card rounded-2xl p-4 bg-card/10 backdrop-blur-xl border-primary-foreground/10"
+          className="mt-5 rounded-2xl p-4 bg-card text-card-foreground shadow-sm border border-border"
         >
           <div className="flex items-center justify-between">
             <div>
