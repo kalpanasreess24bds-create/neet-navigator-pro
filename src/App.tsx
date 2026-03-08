@@ -15,6 +15,7 @@ import Bookmarks from "./pages/Bookmarks";
 import ProgressDashboard from "./pages/ProgressDashboard";
 import Auth from "./pages/Auth";
 import Subscription from "./pages/Subscription";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/progress" element={<ProgressDashboard />} />
             <Route path="/subscription" element={<Subscription />} />
+            <Route path="/neet-admin-x9k2" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
