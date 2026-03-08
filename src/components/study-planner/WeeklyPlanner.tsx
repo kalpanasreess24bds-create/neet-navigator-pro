@@ -31,6 +31,7 @@ const WeeklyPlanner = ({
   onAdd,
   onToggle,
   onMoveToNext,
+  readOnly = false,
 }: WeeklyPlannerProps) => {
   const navigate = useNavigate();
   const [expandedDay, setExpandedDay] = useState<number | null>(null);
