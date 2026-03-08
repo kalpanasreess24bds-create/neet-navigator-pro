@@ -20,11 +20,11 @@ function usePlanStore(user: { id: string } | null, planType: PlanType) {
 
     const fetchPlans = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data, error } = await (supabase
         .from("study_plans")
         .select("*")
-        .eq("user_id", user.id)
-        .eq("plan_type" as any, planType);
+        .eq("user_id", user.id) as any)
+        .eq("plan_type", planType);
 
       if (error) {
         console.error(`Failed to fetch ${planType} plans:`, error);
