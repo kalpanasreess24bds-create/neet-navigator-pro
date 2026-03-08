@@ -9,9 +9,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 const recentlyWatched = [
-  { title: "Cell: The Unit of Life", subject: "Biology", progress: 65, icon: "🧬" },
-  { title: "Chemical Bonding", subject: "Chemistry", progress: 40, icon: "⚗️" },
-  { title: "Laws of Motion", subject: "Physics", progress: 80, icon: "⚛️" },
+  { title: "Cell: The Unit of Life", subject: "Biology", progress: 0, icon: "🧬" },
+  { title: "Chemical Bonding", subject: "Chemistry", progress: 0, icon: "⚗️" },
+  { title: "Laws of Motion", subject: "Physics", progress: 0, icon: "⚛️" },
 ];
 
 const quickActions = [
