@@ -21,7 +21,7 @@ const quickActions = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user: authUser } = useAuth();
+  const { user: authUser, signOut } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const localUser = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
 
