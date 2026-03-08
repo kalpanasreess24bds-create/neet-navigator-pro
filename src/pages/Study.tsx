@@ -13,6 +13,7 @@ const Study = () => {
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
+  const [activeMindMap, setActiveMindMap] = useState<{ chapterId: string; title: string } | null>(null);
 
   const handleBack = () => {
     if (selectedSubject) setSelectedSubject(null);
