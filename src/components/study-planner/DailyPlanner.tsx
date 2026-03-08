@@ -33,6 +33,7 @@ const DailyPlanner = ({
   onRemove,
   onToggle,
   onTimeSlot,
+  readOnly = false,
 }: DailyPlannerProps) => {
   const [showPicker, setShowPicker] = useState(false);
   const navigate = useNavigate();
