@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, BarChart3, Calendar, CalendarDays, Shield, Activity } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
-
+import PremiumGate from "@/components/PremiumGate";
 import ProgressOverview from "@/components/progress/ProgressOverview";
 import WeeklyReport from "@/components/progress/WeeklyReport";
 import MonthlyReport from "@/components/progress/MonthlyReport";
