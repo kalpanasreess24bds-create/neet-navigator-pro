@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Loader2, Sparkles, BookOpen, Layers, Zap, AlertCircle } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
+import PremiumGate from "@/components/PremiumGate";
 import SmartVideoPlayer from "@/components/smart-learning/SmartVideoPlayer";
 import SegmentList from "@/components/smart-learning/SegmentList";
 import TranscriptViewer from "@/components/smart-learning/TranscriptViewer";
@@ -77,6 +78,7 @@ const SmartLearning = () => {
   ];
 
   return (
+    <PremiumGate featureName="Smart Learning">
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="px-4 pt-10 pb-3 flex items-center gap-3">
@@ -191,6 +193,7 @@ const SmartLearning = () => {
       <BreakReminder show={showBreak} onResume={handleResumeBreak} />
       <BottomNav />
     </div>
+    </PremiumGate>
   );
 };
 

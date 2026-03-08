@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, BarChart3, Calendar, CalendarDays, Shield, Activity } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
+import PremiumGate from "@/components/PremiumGate";
 import ProgressOverview from "@/components/progress/ProgressOverview";
 import WeeklyReport from "@/components/progress/WeeklyReport";
 import MonthlyReport from "@/components/progress/MonthlyReport";
@@ -24,6 +25,7 @@ const ProgressDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   return (
+    <PremiumGate featureName="Progress Analytics">
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="gradient-hero px-5 pt-12 pb-6 rounded-b-3xl">
@@ -71,6 +73,7 @@ const ProgressDashboard = () => {
 
       <BottomNav />
     </div>
+    </PremiumGate>
   );
 };
 
