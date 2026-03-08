@@ -9,6 +9,8 @@ export interface PlannedChapter {
   timeSlot?: string;
   completed: boolean;
   videoId?: string;
+  /** Assessment type — if set, this entry is a test, not a study chapter */
+  assessmentType?: "weekly" | "monthly";
 }
 
 export interface DayPlan {
@@ -17,3 +19,8 @@ export interface DayPlan {
 }
 
 export type WeekDay = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+
+/** Check if a planned entry is an assessment */
+export function isAssessment(ch: PlannedChapter): boolean {
+  return ch.chapterId.startsWith("assessment-");
+}

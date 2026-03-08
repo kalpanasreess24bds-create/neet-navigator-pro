@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Calendar, Loader2, RotateCcw, CheckCircle2 } from "lucide-react";
-import { format, addDays, differenceInDays } from "date-fns";
+import { Sparkles, Calendar, Loader2, RotateCcw, CheckCircle2, ClipboardCheck } from "lucide-react";
+import { format, addDays, differenceInDays, getDay } from "date-fns";
 import { studyData } from "@/data/studyContent";
 import type { PlannedChapter } from "@/types/studyPlanner";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
   const [examDate, setExamDate] = useState("");
   const [chaptersPerDay, setChaptersPerDay] = useState(3);
   const [includeRevision, setIncludeRevision] = useState(true);
+  const [includeAssessments, setIncludeAssessments] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [generated, setGenerated] = useState(false);
 
@@ -53,7 +54,6 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
     try {
       // Sort chapters: weak ones first (lower progress), then by subject for balance
       const sorted = [...allChapters].sort((a, b) => {
-        // Priority: lower progress first
         if (a.progress !== b.progress) return a.progress - b.progress;
         return 0;
       });
@@ -87,9 +87,14 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
 
       const timeSlots = ["8:00 AM", "10:00 AM", "2:00 PM", "4:00 PM", "6:00 PM"];
 
+      // Track weeks and months for assessments
+      let weekCounter = 0;
+      let lastMonthSeen = -1;
+
       for (let day = 0; day < studyDays && chapterIndex < interleaved.length; day++) {
         const date = addDays(today, day + 1);
         const dayChapters: PlannedChapter[] = [];
+        const dayOfWeek = getDay(date); // 0=Sun, 6=Sat
 
         for (let j = 0; j < chaptersPerDay && chapterIndex < interleaved.length; j++) {
           const ch = interleaved[chapterIndex];
@@ -106,6 +111,44 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
             videoId: ch.videoId,
           });
           chapterIndex++;
+        }
+
+        // Add weekly assessment on Saturdays
+        if (includeAssessments && dayOfWeek === 6) {
+          weekCounter++;
+          dayChapters.push({
+            id: crypto.randomUUID(),
+            chapterId: `assessment-weekly-${weekCounter}`,
+            chapterName: `📋 Weekly Assessment #${weekCounter}`,
+            subjectId: "assessment",
+            subjectName: "Assessment",
+            subjectColor: "hsl(38 92% 55%)",
+            subjectIcon: "📝",
+            timeSlot: "6:00 PM",
+            completed: false,
+            assessmentType: "weekly",
+          });
+        }
+
+        // Add monthly assessment on the last day of each month
+        if (includeAssessments) {
+          const currentMonth = date.getMonth();
+          const tomorrow = addDays(date, 1);
+          if (tomorrow.getMonth() !== currentMonth && lastMonthSeen !== currentMonth) {
+            lastMonthSeen = currentMonth;
+            dayChapters.push({
+              id: crypto.randomUUID(),
+              chapterId: `assessment-monthly-${currentMonth}`,
+              chapterName: `🏆 Monthly Mock Test — ${format(date, "MMMM")}`,
+              subjectId: "assessment",
+              subjectName: "Assessment",
+              subjectColor: "hsl(340 65% 50%)",
+              subjectIcon: "🏆",
+              timeSlot: "10:00 AM",
+              completed: false,
+              assessmentType: "monthly",
+            });
+          }
         }
 
         if (dayChapters.length > 0) {
@@ -147,7 +190,21 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
 
       await onGenerate(dailyPlans);
       setGenerated(true);
-      toast.success(`Smart plan created! ${dailyPlans.length} days planned.`);
+
+      const weeklyCount = dailyPlans.reduce(
+        (acc, p) => acc + p.chapters.filter((c) => c.assessmentType === "weekly").length,
+        0
+      );
+      const monthlyCount = dailyPlans.reduce(
+        (acc, p) => acc + p.chapters.filter((c) => c.assessmentType === "monthly").length,
+        0
+      );
+
+      toast.success(
+        `Smart plan created! ${dailyPlans.length} days planned${
+          includeAssessments ? ` with ${weeklyCount} weekly & ${monthlyCount} monthly assessments` : ""
+        }.`
+      );
     } catch (e) {
       toast.error("Failed to generate plan");
     } finally {
@@ -175,7 +232,7 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
           <div>
             <h3 className="font-display font-bold text-foreground text-lg">Plan Generated!</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Your smart study plan has been created. Switch to Daily, Weekly, or Monthly view to see it.
+              Your smart study plan with assessments has been created. Switch to Daily, Weekly, or Monthly view to see it.
             </p>
           </div>
           <button
@@ -203,8 +260,7 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
               </div>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Automatically distributes {totalChapters} chapters across your available days.
-              Prioritizes weak chapters and ensures balanced coverage of all subjects.
+              Automatically distributes {totalChapters} chapters across your available days with built-in weekly & monthly assessments.
             </p>
           </motion.div>
 
@@ -287,6 +343,37 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
             </label>
           </motion.div>
 
+          {/* Include Assessments */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18 }}
+            className="elevated-card rounded-xl p-4"
+          >
+            <label className="flex items-center justify-between cursor-pointer">
+              <div>
+                <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                  <ClipboardCheck className="w-3.5 h-3.5 text-primary" /> Include assessments
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">
+                  Weekly tests every Saturday + monthly mock tests
+                </p>
+              </div>
+              <div
+                onClick={() => setIncludeAssessments(!includeAssessments)}
+                className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                  includeAssessments ? "bg-primary" : "bg-secondary"
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full bg-primary-foreground shadow-sm absolute top-0.5 transition-transform ${
+                    includeAssessments ? "translate-x-5" : "translate-x-0.5"
+                  }`}
+                />
+              </div>
+            </label>
+          </motion.div>
+
           {/* Summary */}
           {examDate && (
             <motion.div
@@ -310,9 +397,9 @@ const SmartPlanGenerator = ({ onGenerate, existingPlanDates }: SmartPlanGenerato
                 </div>
                 <div className="bg-secondary rounded-lg p-2.5 text-center">
                   <p className="text-lg font-bold text-foreground font-display">
-                    {includeRevision ? Math.ceil(estimatedDays * 1.15) : estimatedDays}
+                    {includeAssessments ? Math.floor(daysUntilExam / 7) : 0}
                   </p>
-                  <p className="text-[9px] text-muted-foreground">Est. Days</p>
+                  <p className="text-[9px] text-muted-foreground">Assessments</p>
                 </div>
               </div>
             </motion.div>
