@@ -8,7 +8,7 @@ import MindMapViewer from "@/components/MindMapViewer";
 import { studyData, type ClassData, type Subject } from "@/data/studyContent";
 import { mindMapData } from "@/data/mindMapData";
 import StudyPlannerSection from "@/components/study-planner/StudyPlannerSection";
-import { usePremium } from "@/hooks/usePremium";
+
 
 const Study = () => {
   const navigate = useNavigate();
