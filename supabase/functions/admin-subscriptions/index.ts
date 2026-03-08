@@ -39,7 +39,6 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: "Forbidden: admin only" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // Determine action: check body for update payload, otherwise list
     let body: any = null;
     try {
       body = await req.json();
@@ -59,6 +58,79 @@ Deno.serve(async (req) => {
         .eq("id", body.id);
 
       if (error) throw error;
+
+      // Send notification to user when subscription is activated or rejected
+      if (body.status === "active" || body.status === "rejected") {
+        // Get the subscription to find user_id
+        const { data: sub } = await adminClient
+          .from("subscriptions")
+          .select("user_id")
+          .eq("id", body.id)
+          .single();
+
+        if (sub) {
+          const isActive = body.status === "active";
+          // Insert in-app notification
+          await adminClient.from("notifications").insert({
+            user_id: sub.user_id,
+            title: isActive ? "Subscription Activated! 🎉" : "Subscription Update",
+            message: isActive
+              ? "Your premium subscription has been confirmed and activated. Enjoy unlimited access to all features!"
+              : "Your subscription request was not approved. Please contact support for more details.",
+            type: isActive ? "success" : "error",
+          });
+
+          // Send email notification
+          const { data: { user: subUser } } = await adminClient.auth.admin.getUserById(sub.user_id);
+          if (subUser?.email) {
+            try {
+              const resendKey = Deno.env.get("RESEND_API_KEY");
+              if (resendKey) {
+                await fetch("https://api.resend.com/emails", {
+                  method: "POST",
+                  headers: {
+                    "Authorization": `Bearer ${resendKey}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    from: "NEET Navigator <onboarding@resend.dev>",
+                    to: subUser.email,
+                    subject: isActive
+                      ? "✅ Your Subscription is Active!"
+                      : "Subscription Update",
+                    html: isActive
+                      ? `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;">
+                          <h2 style="color:#16a34a;">🎉 Subscription Confirmed!</h2>
+                          <p>Hi there,</p>
+                          <p>Great news! Your premium subscription (₹79/month) has been <strong>activated</strong>.</p>
+                          <p>You now have full access to all premium features including:</p>
+                          <ul>
+                            <li>Smart Learning with AI-powered video analysis</li>
+                            <li>Complete test dashboard with mock tests</li>
+                            <li>Detailed progress tracking</li>
+                            <li>AI study planner</li>
+                          </ul>
+                          <p>Happy studying! 🚀</p>
+                          <p style="color:#888;font-size:12px;">— NEET Navigator Team</p>
+                        </div>`
+                      : `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;">
+                          <h2>Subscription Update</h2>
+                          <p>Hi there,</p>
+                          <p>Unfortunately, your subscription request could not be approved at this time.</p>
+                          <p>If you believe this is an error, please try again or contact support.</p>
+                          <p style="color:#888;font-size:12px;">— NEET Navigator Team</p>
+                        </div>`,
+                  }),
+                });
+              }
+            } catch (emailErr) {
+              console.error("Email send failed:", emailErr);
+              // Don't fail the whole request if email fails
+            }
+          }
+        }
+      }
+
       return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
