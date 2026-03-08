@@ -11,6 +11,7 @@ import SmartLearning from "./pages/SmartLearning";
 import Tests from "./pages/Tests";
 import Chat from "./pages/Chat";
 import Bookmarks from "./pages/Bookmarks";
+import ProgressDashboard from "./pages/ProgressDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/tests" element={<Tests />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/progress" element={<ProgressDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
