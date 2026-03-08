@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network, Sparkles, BookOpen, CalendarDays } from "lucide-react";
+import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network, Sparkles, BookOpen, CalendarDays, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -8,6 +8,7 @@ import MindMapViewer from "@/components/MindMapViewer";
 import { studyData, type ClassData, type Subject } from "@/data/studyContent";
 import { mindMapData } from "@/data/mindMapData";
 import StudyPlannerSection from "@/components/study-planner/StudyPlannerSection";
+import { usePremium } from "@/hooks/usePremium";
 
 const Study = () => {
   const navigate = useNavigate();
