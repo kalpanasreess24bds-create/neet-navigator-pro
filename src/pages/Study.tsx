@@ -22,7 +22,9 @@ const Study = () => {
     else if (selectedClass) setSelectedClass(null);
   };
 
-  const title = selectedSubject
+  const title = viewMode === "planner"
+    ? "Study Planner"
+    : selectedSubject
     ? selectedSubject.name
     : selectedClass
     ? selectedClass.name
