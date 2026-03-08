@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, FileText, Layers, Play, ArrowLeft } from "lucide-react";
+import { ChevronRight, FileText, Layers, Play, ArrowLeft, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import VideoPlayer from "@/components/VideoPlayer";
+import MindMapViewer from "@/components/MindMapViewer";
 import { studyData, type ClassData, type Subject, type Chapter } from "@/data/studyContent";
+import { mindMapData } from "@/data/mindMapData";
 
 const Study = () => {
   const navigate = useNavigate();
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
+  const [activeMindMap, setActiveMindMap] = useState<{ chapterId: string; title: string } | null>(null);
 
   const handleBack = () => {
     if (selectedSubject) setSelectedSubject(null);
@@ -155,6 +158,14 @@ const Study = () => {
                             <Layers className="w-3.5 h-3.5" /> Cards
                           </button>
                         )}
+                        {mindMapData[ch.id] && (
+                          <button
+                            onClick={() => setActiveMindMap({ chapterId: ch.id, title: ch.name })}
+                            className="flex items-center gap-1 text-xs text-primary/70 font-medium hover:underline"
+                          >
+                            <Network className="w-3.5 h-3.5" /> Mind Map
+                          </button>
+                        )}
                       </div>
                       {ch.progress > 0 && (
                         <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
@@ -181,6 +192,14 @@ const Study = () => {
           videoId={activeVideo.videoId}
           title={activeVideo.title}
           onClose={() => setActiveVideo(null)}
+        />
+      )}
+
+      {activeMindMap && mindMapData[activeMindMap.chapterId] && (
+        <MindMapViewer
+          data={mindMapData[activeMindMap.chapterId]}
+          title={activeMindMap.title}
+          onClose={() => setActiveMindMap(null)}
         />
       )}
 
