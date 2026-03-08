@@ -12,6 +12,7 @@ import { usePremium } from "@/hooks/usePremium";
 
 const Study = () => {
   const navigate = useNavigate();
+  const { isPremium } = usePremium();
   const [viewMode, setViewMode] = useState<"chapters" | "planner">("chapters");
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
