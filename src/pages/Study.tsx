@@ -222,6 +222,7 @@ const Study = () => {
             </motion.div>
           )}
         </AnimatePresence>
+        )}
       </div>
 
       {activeVideo && (
