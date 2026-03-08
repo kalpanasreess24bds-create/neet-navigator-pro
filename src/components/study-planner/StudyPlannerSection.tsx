@@ -33,6 +33,9 @@ const StudyPlannerSection = () => {
         await planner.addChapterToDate(plan.date, ch);
       }
     }
+    // Auto-switch to My Plan daily view after generation
+    setPlanMode("my-plan");
+    setActiveTab("daily");
   };
 
   return (
