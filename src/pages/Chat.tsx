@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Send, Bot, User } from "lucide-react";
+import { Send, Bot, User, Mic, MicOff, Square } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
@@ -31,8 +31,62 @@ const Chat = () => {
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const recognitionRef = useRef<any>(null);
+
+  const startRecording = useCallback(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error("Voice input not supported in this browser");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-IN";
+    recognition.interimResults = true;
+    recognition.continuous = true;
+    recognitionRef.current = recognition;
+
+    let finalTranscript = "";
+
+    recognition.onresult = (event: any) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interim = transcript;
+        }
+      }
+      setInput(finalTranscript + interim);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+      if (event.error !== "aborted") {
+        toast.error("Voice recognition failed. Try again.");
+      }
+      setIsRecording(false);
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognition.start();
+    setIsRecording(true);
+  }, []);
+
+  const stopRecording = useCallback(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    setIsRecording(false);
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -240,15 +294,41 @@ const Chat = () => {
 
       {/* Input */}
       <div className="px-5 pb-20 pt-2 border-t border-border/50">
+        {isRecording && (
+          <motion.div
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 mb-2 px-3 py-2 bg-destructive/10 rounded-xl"
+          >
+            <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+            <span className="text-xs text-destructive font-medium flex-1">Listening... speak now</span>
+            <button
+              onClick={stopRecording}
+              className="text-xs text-destructive font-medium hover:underline"
+            >
+              Stop
+            </button>
+          </motion.div>
+        )}
         <div className="flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
-            placeholder="Ask a NEET question..."
+            placeholder={isRecording ? "Listening..." : "Ask a NEET question..."}
             className="flex-1 bg-secondary rounded-xl px-4 py-3 text-sm text-secondary-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30"
           />
+          <button
+            onClick={isRecording ? stopRecording : startRecording}
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
+              isRecording
+                ? "bg-destructive text-destructive-foreground animate-pulse"
+                : "bg-secondary text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {isRecording ? <Square className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+          </button>
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isTyping}
