@@ -36,7 +36,7 @@ const sections: { id: Section; label: string; icon: React.ReactNode; emoji: stri
 ];
 
 const StudentCorner = () => {
-  const [activeSection, setActiveSection] = useState<Section>("motivation");
+  const [activeSection, setActiveSection] = useState<Section>("nta");
 
   return (
     <div className="min-h-screen bg-background pb-24">
