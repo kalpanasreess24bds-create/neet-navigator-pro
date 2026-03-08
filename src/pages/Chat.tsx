@@ -2,12 +2,16 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, Bot, User } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
+import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
 }
+
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 const suggestedQuestions = [
   "Explain mitosis vs meiosis",
@@ -28,28 +32,134 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
   const sendMessage = async (text: string) => {
-    if (!text.trim()) return;
+    if (!text.trim() || isTyping) return;
     const userMsg: Message = { id: Date.now().toString(), role: "user", content: text };
-    setMessages((prev) => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInput("");
     setIsTyping(true);
 
-    // Simulated AI response (replace with real LLM integration via Lovable Cloud)
-    setTimeout(() => {
-      const response: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: `Great question about "${text}"! 🧠\n\nTo get real AI-powered answers, connect **Lovable Cloud** to enable the AI Study Buddy with Gemini/GPT integration.\n\nThis will allow me to:\n- Answer detailed NEET questions\n- Explain concepts step by step\n- Provide practice problems\n- Help with doubt clearing`,
-      };
-      setMessages((prev) => [...prev, response]);
+    // Build conversation history (skip the welcome message)
+    const history = newMessages
+      .filter((m) => m.id !== "welcome")
+      .map((m) => ({ role: m.role, content: m.content }));
+
+    let assistantContent = "";
+    const assistantId = (Date.now() + 1).toString();
+
+    try {
+      abortRef.current = new AbortController();
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: history }),
+        signal: abortRef.current.signal,
+      });
+
+      if (!resp.ok) {
+        const errData = await resp.json().catch(() => ({}));
+        throw new Error(errData.error || `Request failed (${resp.status})`);
+      }
+
+      if (!resp.body) throw new Error("No response body");
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantContent += content;
+              setMessages((prev) => {
+                const last = prev[prev.length - 1];
+                if (last?.role === "assistant" && last.id === assistantId) {
+                  return prev.map((m, i) =>
+                    i === prev.length - 1 ? { ...m, content: assistantContent } : m
+                  );
+                }
+                return [...prev, { id: assistantId, role: "assistant", content: assistantContent }];
+              });
+            }
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+
+      // Flush remaining buffer
+      if (textBuffer.trim()) {
+        for (let raw of textBuffer.split("\n")) {
+          if (!raw) continue;
+          if (raw.endsWith("\r")) raw = raw.slice(0, -1);
+          if (raw.startsWith(":") || raw.trim() === "") continue;
+          if (!raw.startsWith("data: ")) continue;
+          const jsonStr = raw.slice(6).trim();
+          if (jsonStr === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantContent += content;
+              setMessages((prev) =>
+                prev.map((m, i) =>
+                  i === prev.length - 1 && m.id === assistantId
+                    ? { ...m, content: assistantContent }
+                    : m
+                )
+              );
+            }
+          } catch {}
+        }
+      }
+
+      if (!assistantContent) {
+        setMessages((prev) => [
+          ...prev,
+          { id: assistantId, role: "assistant", content: "I couldn't generate a response. Please try again." },
+        ]);
+      }
+    } catch (err: any) {
+      if (err.name === "AbortError") return;
+      console.error("Chat error:", err);
+      toast.error(err.message || "Failed to get response");
+      setMessages((prev) => [
+        ...prev,
+        { id: assistantId, role: "assistant", content: "Sorry, something went wrong. Please try again." },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+      abortRef.current = null;
+    }
   };
 
   return (
@@ -92,22 +202,14 @@ const Chat = () => {
                   : "bg-secondary text-secondary-foreground rounded-tl-sm"
               }`}
             >
-              {msg.content.split("\n").map((line, i) => (
-                <p key={i} className={i > 0 ? "mt-1.5" : ""}>
-                  {line.split(/(\*\*.*?\*\*)/).map((part, j) =>
-                    part.startsWith("**") && part.endsWith("**") ? (
-                      <strong key={j}>{part.slice(2, -2)}</strong>
-                    ) : (
-                      part
-                    )
-                  )}
-                </p>
-              ))}
+              <div className="prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-headings:my-1.5">
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
+              </div>
             </div>
           </motion.div>
         ))}
 
-        {isTyping && (
+        {isTyping && messages[messages.length - 1]?.role !== "assistant" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-2.5">
             <div className="w-7 h-7 rounded-lg gradient-primary flex items-center justify-center">
               <Bot className="w-3.5 h-3.5 text-primary-foreground" />
@@ -149,7 +251,7 @@ const Chat = () => {
           />
           <button
             onClick={() => sendMessage(input)}
-            disabled={!input.trim()}
+            disabled={!input.trim() || isTyping}
             className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center disabled:opacity-50 transition-opacity"
           >
             <Send className="w-5 h-5 text-primary-foreground" />
