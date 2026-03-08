@@ -47,8 +47,8 @@ export const studyData: ClassData[] = [
         icon: "⚗️",
         color: "hsl(243 75% 55%)",
         chapters: [
-          { id: "c11-1", name: "Some Basic Concepts of Chemistry", videoId: "nG4pJxOBkuo", hasPdf: true, hasFlashcards: true, progress: 70 },
-          { id: "c11-2", name: "Structure of Atom", videoId: "rcKilE9CdaA", hasPdf: true, hasFlashcards: true, progress: 50 },
+          { id: "c11-1", name: "Some Basic Concepts of Chemistry", videoId: "bn9EPxmsveI", hasPdf: true, hasFlashcards: true, progress: 70 },
+          { id: "c11-2", name: "Structure of Atom", videoId: "rf6p4q5chdE", hasPdf: true, hasFlashcards: true, progress: 50 },
           { id: "c11-3", name: "Classification of Elements", videoId: "TL0Y5bvMGOY", hasPdf: true, hasFlashcards: false, progress: 20 },
           { id: "c11-4", name: "Chemical Bonding", videoId: "xMa1BQ8z5Jo", hasPdf: true, hasFlashcards: true, progress: 0 },
           { id: "c11-5", name: "Thermodynamics", videoId: "brP0DPGCl70", hasPdf: true, hasFlashcards: true, progress: 0 },
