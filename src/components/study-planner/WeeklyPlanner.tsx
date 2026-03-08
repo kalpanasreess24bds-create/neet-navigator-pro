@@ -5,7 +5,9 @@ import { ChevronLeft, ChevronRight, ArrowRight, Play } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import ChapterPicker from "./ChapterPicker";
+import AssessmentCard from "./AssessmentCard";
 import type { PlannedChapter } from "@/types/studyPlanner";
+import { isAssessment } from "@/types/studyPlanner";
 import { useNavigate } from "react-router-dom";
 
 const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -39,6 +41,9 @@ const WeeklyPlanner = ({
   const allWeekChapters = days.flatMap((d) => getChaptersForDate(d));
   const weekProgress = getProgress(allWeekChapters);
 
+  const weeklyAssessments = allWeekChapters.filter((c) => isAssessment(c));
+  const hasAssessment = weeklyAssessments.length > 0;
+
   return (
     <div className="space-y-4">
       {/* Week Navigation */}
@@ -65,7 +70,8 @@ const WeeklyPlanner = ({
           </div>
           <Progress value={weekProgress} className="h-2" />
           <p className="text-[10px] text-muted-foreground mt-1.5">
-            {allWeekChapters.filter((c) => c.completed).length}/{allWeekChapters.length} chapters
+            {allWeekChapters.filter((c) => c.completed).length}/{allWeekChapters.length} items
+            {hasAssessment && ` • ${weeklyAssessments.length} assessment${weeklyAssessments.length > 1 ? "s" : ""}`}
           </p>
         </div>
       )}
@@ -77,25 +83,42 @@ const WeeklyPlanner = ({
           const dayProgress = getProgress(chapters);
           const isExpanded = expandedDay === i;
           const isToday = format(d, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
-          const incomplete = chapters.filter((c) => !c.completed);
+          const dayAssessments = chapters.filter((c) => isAssessment(c));
+          const dayStudy = chapters.filter((c) => !isAssessment(c));
+          const hasAssessmentToday = dayAssessments.length > 0;
 
           return (
             <motion.div
               key={i}
-              className={`elevated-card rounded-xl overflow-hidden ${isToday ? "ring-1 ring-primary/30" : ""}`}
+              className={`elevated-card rounded-xl overflow-hidden ${
+                isToday ? "ring-1 ring-primary/30" : ""
+              } ${hasAssessmentToday ? "ring-1 ring-accent/30" : ""}`}
             >
               <button
                 onClick={() => setExpandedDay(isExpanded ? null : i)}
                 className="w-full flex items-center gap-3 p-3 text-left"
               >
-                <div className={`w-10 h-10 rounded-lg flex flex-col items-center justify-center text-xs font-bold ${isToday ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"}`}>
+                <div className={`w-10 h-10 rounded-lg flex flex-col items-center justify-center text-xs font-bold ${
+                  hasAssessmentToday
+                    ? "bg-accent/20 text-accent-foreground"
+                    : isToday
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-foreground"
+                }`}>
                   <span className="text-[9px] font-medium opacity-70">{dayLabels[i]}</span>
                   <span>{format(d, "d")}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-card-foreground">
-                    {chapters.length === 0 ? "No chapters" : `${chapters.length} chapter${chapters.length > 1 ? "s" : ""}`}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-card-foreground">
+                      {chapters.length === 0 ? "No chapters" : `${dayStudy.length} chapter${dayStudy.length !== 1 ? "s" : ""}`}
+                    </p>
+                    {hasAssessmentToday && (
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-accent/10 text-accent-foreground">
+                        📋 TEST
+                      </span>
+                    )}
+                  </div>
                   {chapters.length > 0 && (
                     <div className="flex items-center gap-2 mt-1">
                       <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
@@ -117,7 +140,18 @@ const WeeklyPlanner = ({
                     className="overflow-hidden"
                   >
                     <div className="px-3 pb-3 space-y-2">
-                      {chapters.map((ch) => (
+                      {/* Assessment cards first */}
+                      {dayAssessments.map((ch) => (
+                        <AssessmentCard
+                          key={ch.id}
+                          chapter={ch}
+                          onToggle={() => onToggle(d, ch.chapterId)}
+                          compact
+                        />
+                      ))}
+
+                      {/* Study chapters */}
+                      {dayStudy.map((ch) => (
                         <div
                           key={ch.id}
                           className={`flex items-center gap-2 p-2 rounded-lg bg-secondary/50 ${!ch.completed ? "" : "opacity-50"}`}
