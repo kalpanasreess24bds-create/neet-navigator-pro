@@ -150,13 +150,15 @@ const Study = () => {
               exit={{ opacity: 0, x: -40 }}
               className="space-y-3"
             >
-              {selectedSubject.chapters.map((ch, i) => (
+              {selectedSubject.chapters.map((ch, i) => {
+                const isLocked = !isPremium && i >= 3;
+                return (
                 <motion.div
                   key={ch.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="elevated-card rounded-xl p-4"
+                  className={`elevated-card rounded-xl p-4 ${isLocked ? "opacity-60" : ""}`}
                 >
                   <div className="flex items-start gap-3">
                     <div
@@ -166,10 +168,23 @@ const Study = () => {
                         color: selectedSubject.color,
                       }}
                     >
-                      {i + 1}
+                      {isLocked ? <Lock className="w-4 h-4" /> : i + 1}
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-sm text-card-foreground">{ch.name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-sm text-card-foreground">{ch.name}</p>
+                        {isLocked && (
+                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary">PRO</span>
+                        )}
+                      </div>
+                      {isLocked ? (
+                        <button
+                          onClick={() => navigate("/subscription")}
+                          className="mt-2 text-xs font-medium text-primary hover:underline flex items-center gap-1"
+                        >
+                          <Lock className="w-3 h-3" /> Unlock with Premium – ₹79
+                        </button>
+                      ) : (
                       <div className="flex items-center gap-3 mt-2 flex-wrap">
                         {ch.videoId && (
                           <button
@@ -206,7 +221,8 @@ const Study = () => {
                           </button>
                         )}
                       </div>
-                      {ch.progress > 0 && (
+                      )}
+                      {ch.progress > 0 && !isLocked && (
                         <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
                           <div
                             className="h-full rounded-full transition-all"
@@ -220,7 +236,8 @@ const Study = () => {
                     </div>
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
           )}
         </AnimatePresence>
