@@ -137,9 +137,14 @@ const Study = () => {
                     <div className="flex-1">
                       <p className="font-semibold text-sm text-card-foreground">{ch.name}</p>
                       <div className="flex items-center gap-3 mt-2">
-                        <button className="flex items-center gap-1 text-xs text-primary font-medium">
-                          <Play className="w-3.5 h-3.5" /> Video
-                        </button>
+                        {ch.videoId && (
+                          <button
+                            onClick={() => setActiveVideo({ videoId: ch.videoId!, title: ch.name })}
+                            className="flex items-center gap-1 text-xs text-primary font-medium hover:underline"
+                          >
+                            <Play className="w-3.5 h-3.5" /> Video
+                          </button>
+                        )}
                         {ch.hasPdf && (
                           <button className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
                             <FileText className="w-3.5 h-3.5" /> Notes
