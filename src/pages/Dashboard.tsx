@@ -9,9 +9,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 const recentlyWatched = [
-  { title: "Cell: The Unit of Life", subject: "Biology", progress: 65, icon: "🧬" },
-  { title: "Chemical Bonding", subject: "Chemistry", progress: 40, icon: "⚗️" },
-  { title: "Laws of Motion", subject: "Physics", progress: 80, icon: "⚛️" },
+  { title: "Cell: The Unit of Life", subject: "Biology", progress: 0, icon: "🧬" },
+  { title: "Chemical Bonding", subject: "Chemistry", progress: 0, icon: "⚗️" },
+  { title: "Laws of Motion", subject: "Physics", progress: 0, icon: "⚛️" },
 ];
 
 const quickActions = [
@@ -120,10 +120,10 @@ const Dashboard = () => {
                 <TrendingUp className="w-4 h-4 text-accent" />
                 <span className="text-xs font-semibold text-muted-foreground">Daily Progress</span>
               </div>
-              <p className="text-2xl font-bold text-card-foreground font-display">42%</p>
-              <p className="text-xs text-muted-foreground mt-0.5">3 of 7 tasks done today</p>
+              <p className="text-2xl font-bold text-card-foreground font-display">0%</p>
+              <p className="text-xs text-muted-foreground mt-0.5">0 of 7 tasks done today</p>
             </div>
-            <ProgressRing progress={42} size={64} strokeWidth={5} />
+            <ProgressRing progress={0} size={64} strokeWidth={5} />
           </div>
         </motion.div>
       </div>
