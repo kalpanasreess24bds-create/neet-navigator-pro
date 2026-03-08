@@ -1,0 +1,130 @@
+import { motion } from "framer-motion";
+import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import BottomNav from "@/components/BottomNav";
+import ProgressRing from "@/components/ProgressRing";
+
+const recentlyWatched = [
+  { title: "Cell: The Unit of Life", subject: "Biology", progress: 65, icon: "🧬" },
+  { title: "Chemical Bonding", subject: "Chemistry", progress: 40, icon: "⚗️" },
+  { title: "Laws of Motion", subject: "Physics", progress: 80, icon: "⚛️" },
+];
+
+const quickActions = [
+  { label: "Biology", icon: "🧬", count: 7, color: "hsl(152 60% 45%)" },
+  { label: "Chemistry", icon: "⚗️", count: 5, color: "hsl(243 75% 55%)" },
+  { label: "Physics", icon: "⚛️", count: 5, color: "hsl(38 92% 55%)" },
+];
+
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
+
+  return (
+    <div className="min-h-screen bg-background pb-20">
+      {/* Header */}
+      <div className="gradient-hero px-5 pt-12 pb-8 rounded-b-3xl">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
+          <h1 className="text-2xl font-bold text-primary-foreground font-display">
+            {user.name || "Student"} 👋
+          </h1>
+        </motion.div>
+
+        {/* Daily Progress */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mt-5 glass-card rounded-2xl p-4 bg-card/10 backdrop-blur-xl border-primary-foreground/10"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <TrendingUp className="w-4 h-4 text-accent" />
+                <span className="text-xs font-semibold text-primary-foreground/80">Daily Progress</span>
+              </div>
+              <p className="text-2xl font-bold text-primary-foreground font-display">42%</p>
+              <p className="text-xs text-primary-foreground/60 mt-0.5">3 of 7 tasks done today</p>
+            </div>
+            <ProgressRing progress={42} size={64} strokeWidth={5} />
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="px-5 mt-6 space-y-6">
+        {/* Subject Quick Access */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+          <h2 className="font-display font-bold text-base text-foreground mb-3">Subjects</h2>
+          <div className="grid grid-cols-3 gap-3">
+            {quickActions.map((subj) => (
+              <button
+                key={subj.label}
+                onClick={() => navigate("/study")}
+                className="elevated-card rounded-2xl p-4 text-center hover:scale-[1.02] transition-transform"
+              >
+                <span className="text-2xl">{subj.icon}</span>
+                <p className="text-sm font-semibold text-card-foreground mt-2">{subj.label}</p>
+                <p className="text-xs text-muted-foreground">{subj.count} chapters</p>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Recently Watched */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+          <h2 className="font-display font-bold text-base text-foreground mb-3">Continue Learning</h2>
+          <div className="space-y-3">
+            {recentlyWatched.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+                className="elevated-card rounded-xl p-4 flex items-center gap-4 hover:scale-[1.01] transition-transform cursor-pointer"
+                onClick={() => navigate("/study")}
+              >
+                <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center text-xl shrink-0">
+                  {item.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm text-card-foreground truncate">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">{item.subject}</p>
+                  <div className="mt-1.5 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full gradient-primary rounded-full transition-all duration-500"
+                      style={{ width: `${item.progress}%` }}
+                    />
+                  </div>
+                </div>
+                <Play className="w-5 h-5 text-primary shrink-0" />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Quick Test */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          <button
+            onClick={() => navigate("/tests")}
+            className="w-full gradient-accent rounded-2xl p-5 text-left hover:scale-[1.01] transition-transform"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-display font-bold text-accent-foreground">Quick NEET Test</p>
+                <p className="text-sm text-accent-foreground/70 mt-1">10 MCQs • 15 minutes • NEET pattern</p>
+              </div>
+              <div className="w-12 h-12 rounded-xl bg-accent-foreground/10 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-accent-foreground" />
+              </div>
+            </div>
+          </button>
+        </motion.div>
+      </div>
+
+      <BottomNav />
+    </div>
+  );
+};
+
+export default Dashboard;
