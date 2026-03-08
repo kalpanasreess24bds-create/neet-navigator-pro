@@ -122,23 +122,6 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Quick Test */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-          <button
-            onClick={() => navigate("/tests")}
-            className="w-full gradient-accent rounded-2xl p-5 text-left hover:scale-[1.01] transition-transform"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-display font-bold text-accent-foreground">Quick NEET Test</p>
-                <p className="text-sm text-accent-foreground/70 mt-1">10 MCQs • 15 minutes • NEET pattern</p>
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-accent-foreground/10 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-accent-foreground" />
-              </div>
-            </div>
-          </button>
-        </motion.div>
       </div>
 
       <BottomNav />
