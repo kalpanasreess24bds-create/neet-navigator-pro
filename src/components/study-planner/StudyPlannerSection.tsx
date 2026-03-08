@@ -133,6 +133,7 @@ const StudyPlannerSection = () => {
                 getChaptersForDate={planner.getChaptersForDate}
                 getProgress={planner.getProgress}
                 onAdd={(d, ch) => planner.addChapterToDate(d, ch)}
+                onToggle={(d, id) => planner.toggleComplete(d, id)}
               />
             )}
           </motion.div>

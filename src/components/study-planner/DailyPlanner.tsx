@@ -5,7 +5,9 @@ import { format, addDays, subDays } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import ChapterPicker from "./ChapterPicker";
+import AssessmentCard from "./AssessmentCard";
 import type { PlannedChapter } from "@/types/studyPlanner";
+import { isAssessment } from "@/types/studyPlanner";
 import { useNavigate } from "react-router-dom";
 
 interface DailyPlannerProps {
@@ -35,6 +37,9 @@ const DailyPlanner = ({
   const navigate = useNavigate();
   const isToday = format(date, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
 
+  const studyChapters = chapters.filter((c) => !isAssessment(c));
+  const assessmentChapters = chapters.filter((c) => isAssessment(c));
+
   return (
     <div className="space-y-4">
       {/* Date Navigation */}
@@ -62,15 +67,28 @@ const DailyPlanner = ({
           </div>
           <Progress value={progress} className="h-2" />
           <p className="text-[10px] text-muted-foreground mt-1.5">
-            {chapters.filter((c) => c.completed).length}/{chapters.length} chapters completed
+            {chapters.filter((c) => c.completed).length}/{chapters.length} items completed
           </p>
         </div>
       )}
 
-      {/* Chapter List */}
+      {/* Assessment Cards */}
+      {assessmentChapters.length > 0 && (
+        <div className="space-y-2">
+          {assessmentChapters.map((ch) => (
+            <AssessmentCard
+              key={ch.id}
+              chapter={ch}
+              onToggle={() => onToggle(ch.chapterId)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Study Chapter List */}
       <div className="space-y-2">
         <AnimatePresence>
-          {chapters.map((ch, i) => (
+          {studyChapters.map((ch, i) => (
             <motion.div
               key={ch.id}
               initial={{ opacity: 0, x: -10 }}
