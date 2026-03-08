@@ -15,7 +15,7 @@ const MonthlyTestSection = ({ onBack }: { onBack: () => void }) => {
   const [results, setResults] = useState<TestResult[]>([]);
 
   const startTest = () => {
-    const qs = getFullTestQuestions(45);
+    const qs = getMonthlyTestQuestions(45);
     setQuestions(qs);
     setState("quiz");
   };
