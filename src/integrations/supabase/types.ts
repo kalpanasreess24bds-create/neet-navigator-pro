@@ -52,6 +52,7 @@ export type Database = {
           created_at: string
           id: string
           plan_date: string
+          plan_type: string
           subject_color: string
           subject_icon: string
           subject_id: string
@@ -67,6 +68,7 @@ export type Database = {
           created_at?: string
           id?: string
           plan_date: string
+          plan_type?: string
           subject_color: string
           subject_icon: string
           subject_id: string
@@ -82,6 +84,7 @@ export type Database = {
           created_at?: string
           id?: string
           plan_date?: string
+          plan_type?: string
           subject_color?: string
           subject_icon?: string
           subject_id?: string
