@@ -154,19 +154,25 @@ const DailyPlanner = ({
         </AnimatePresence>
       </div>
 
-      {/* Add Button */}
-      <button
-        onClick={() => setShowPicker(true)}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/40 transition-colors text-sm font-medium text-muted-foreground hover:text-primary"
-      >
-        <Plus className="w-4 h-4" /> Add Chapter
-      </button>
+      {/* Add Button — only in manual mode */}
+      {!readOnly && (
+        <button
+          onClick={() => setShowPicker(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/40 transition-colors text-sm font-medium text-muted-foreground hover:text-primary"
+        >
+          <Plus className="w-4 h-4" /> Add Chapter
+        </button>
+      )}
 
       {/* Empty State */}
       {chapters.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-muted-foreground text-sm">No chapters planned for this day</p>
-          <p className="text-muted-foreground text-xs mt-1">Tap "Add Chapter" to start planning</p>
+          <p className="text-muted-foreground text-sm">
+            {readOnly ? "No chapters scheduled for this day" : "No chapters planned for this day"}
+          </p>
+          {!readOnly && (
+            <p className="text-muted-foreground text-xs mt-1">Tap "Add Chapter" to start planning</p>
+          )}
         </div>
       )}
 

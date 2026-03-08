@@ -210,12 +210,14 @@ const MonthlyPlanner = ({
               <p className="text-sm font-display font-bold text-foreground">
                 {format(selectedDay, "EEEE, MMM d")}
               </p>
-              <button
-                onClick={() => setPickerDay(selectedDay)}
-                className="text-xs text-primary font-medium hover:underline"
-              >
-                + Add
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setPickerDay(selectedDay)}
+                  className="text-xs text-primary font-medium hover:underline"
+                >
+                  + Add
+                </button>
+              )}
             </div>
             {getChaptersForDate(selectedDay).length === 0 ? (
               <p className="text-xs text-muted-foreground py-2">No chapters planned</p>

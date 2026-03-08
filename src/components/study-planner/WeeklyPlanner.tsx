@@ -189,12 +189,14 @@ const WeeklyPlanner = ({
                         </div>
                       ))}
 
-                      <button
-                        onClick={() => setPickerDay(d)}
-                        className="w-full text-xs text-primary font-medium py-2 hover:underline"
-                      >
-                        + Add Chapter
-                      </button>
+                      {!readOnly && (
+                        <button
+                          onClick={() => setPickerDay(d)}
+                          className="w-full text-xs text-primary font-medium py-2 hover:underline"
+                        >
+                          + Add Chapter
+                        </button>
+                      )}
                     </div>
                   </motion.div>
                 )}
