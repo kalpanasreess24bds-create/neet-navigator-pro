@@ -176,6 +176,14 @@ const Study = () => {
         </AnimatePresence>
       </div>
 
+      {activeVideo && (
+        <VideoPlayer
+          videoId={activeVideo.videoId}
+          title={activeVideo.title}
+          onClose={() => setActiveVideo(null)}
+        />
+      )}
+
       <BottomNav />
     </div>
   );
