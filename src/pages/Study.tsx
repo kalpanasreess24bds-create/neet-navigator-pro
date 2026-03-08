@@ -148,6 +148,14 @@ const Study = () => {
                             <Play className="w-3.5 h-3.5" /> Video
                           </button>
                         )}
+                        {ch.videoId && (
+                          <button
+                            onClick={() => navigate(`/smart-learning?v=${ch.videoId}&title=${encodeURIComponent(ch.name)}`)}
+                            className="flex items-center gap-1 text-xs text-accent-foreground font-medium hover:underline"
+                          >
+                            <Sparkles className="w-3.5 h-3.5" /> Smart Learn
+                          </button>
+                        )}
                         {ch.hasPdf && (
                           <button className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
                             <FileText className="w-3.5 h-3.5" /> Notes
