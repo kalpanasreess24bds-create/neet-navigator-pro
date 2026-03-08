@@ -15,20 +15,6 @@ export const usePremium = () => {
     }
 
     const checkAccess = async () => {
-      // Admins get free access
-      const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id)
-        .eq("role", "admin")
-        .maybeSingle();
-
-      if (roleData) {
-        setIsPremium(true);
-        setLoading(false);
-        return;
-      }
-
       const { data } = await supabase
         .from("subscriptions")
         .select("status")
