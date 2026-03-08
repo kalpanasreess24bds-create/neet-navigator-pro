@@ -15,6 +15,7 @@ interface MonthlyPlannerProps {
   getProgress: (chapters: PlannedChapter[]) => number;
   onAdd: (d: Date, ch: PlannedChapter) => void;
   onToggle?: (d: Date, chapterId: string) => void;
+  readOnly?: boolean;
 }
 
 const dayHeaders = ["M", "T", "W", "T", "F", "S", "S"];
