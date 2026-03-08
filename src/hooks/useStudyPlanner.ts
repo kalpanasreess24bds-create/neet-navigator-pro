@@ -6,13 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
-export function useStudyPlanner() {
-  const { user } = useAuth();
+type PlanType = "manual" | "smart";
+
+function usePlanStore(user: { id: string } | null, planType: PlanType) {
   const [plans, setPlans] = useState<Record<string, PlannedChapter[]>>({});
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
-  // Fetch all plans from DB
   useEffect(() => {
     if (!user) {
       setPlans({});
@@ -21,13 +20,14 @@ export function useStudyPlanner() {
 
     const fetchPlans = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data, error } = await (supabase
         .from("study_plans")
         .select("*")
-        .eq("user_id", user.id);
+        .eq("user_id", user.id) as any)
+        .eq("plan_type", planType);
 
       if (error) {
-        console.error("Failed to fetch plans:", error);
+        console.error(`Failed to fetch ${planType} plans:`, error);
         setLoading(false);
         return;
       }
@@ -47,6 +47,11 @@ export function useStudyPlanner() {
           timeSlot: row.time_slot ?? undefined,
           completed: row.completed,
           videoId: row.video_id ?? undefined,
+          assessmentType: row.chapter_id.startsWith("assessment-weekly")
+            ? "weekly"
+            : row.chapter_id.startsWith("assessment-monthly")
+            ? "monthly"
+            : undefined,
         });
       }
       setPlans(grouped);
@@ -54,17 +59,7 @@ export function useStudyPlanner() {
     };
 
     fetchPlans();
-  }, [user]);
-
-  const allSubjects = useMemo(() => {
-    return studyData.flatMap((cls) =>
-      cls.subjects.map((s) => ({
-        ...s,
-        className: cls.name,
-        classId: cls.id,
-      }))
-    );
-  }, []);
+  }, [user, planType]);
 
   const dateKey = useCallback((d: Date) => format(d, "yyyy-MM-dd"), []);
 
@@ -94,7 +89,8 @@ export function useStudyPlanner() {
           time_slot: chapter.timeSlot || null,
           completed: false,
           video_id: chapter.videoId || null,
-        })
+          plan_type: planType,
+        } as any)
         .select()
         .single();
 
@@ -106,7 +102,7 @@ export function useStudyPlanner() {
       const newChapter: PlannedChapter = { ...chapter, id: data.id };
       setPlans((prev) => ({ ...prev, [key]: [...(prev[key] || []), newChapter] }));
     },
-    [plans, dateKey, user]
+    [plans, dateKey, user, planType]
   );
 
   const removeChapterFromDate = useCallback(
@@ -222,19 +218,68 @@ export function useStudyPlanner() {
     [plans, dateKey, user]
   );
 
+  const clearAllPlans = useCallback(
+    async () => {
+      if (!user) return;
+      const { error } = await (supabase
+        .from("study_plans")
+        .delete()
+        .eq("user_id", user.id) as any)
+        .eq("plan_type", planType);
+
+      if (error) {
+        toast.error("Failed to clear plans");
+        return;
+      }
+      setPlans({});
+    },
+    [user, planType]
+  );
+
+  return {
+    plans,
+    loading,
+    dateKey,
+    getChaptersForDate,
+    addChapterToDate,
+    removeChapterFromDate,
+    toggleComplete,
+    updateTimeSlot,
+    moveToNextDay,
+    clearAllPlans,
+  };
+}
+
+export function useStudyPlanner() {
+  const { user } = useAuth();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const manual = usePlanStore(user, "manual");
+  const smart = usePlanStore(user, "smart");
+
+  const allSubjects = useMemo(() => {
+    return studyData.flatMap((cls) =>
+      cls.subjects.map((s) => ({
+        ...s,
+        className: cls.name,
+        classId: cls.id,
+      }))
+    );
+  }, []);
+
   const getWeekDays = useCallback(
-    (refDate: Date) => {
+    (refDate: Date, getChaptersForDate: (d: Date) => PlannedChapter[]) => {
       const start = startOfWeek(refDate, { weekStartsOn: 1 });
       return Array.from({ length: 7 }, (_, i) => {
         const d = addDays(start, i);
         return { date: d, chapters: getChaptersForDate(d) };
       });
     },
-    [getChaptersForDate]
+    []
   );
 
   const getMonthDays = useCallback(
-    (refDate: Date) => {
+    (refDate: Date, getChaptersForDate: (d: Date) => PlannedChapter[]) => {
       const start = startOfMonth(refDate);
       const end = endOfMonth(refDate);
       return eachDayOfInterval({ start, end }).map((d) => ({
@@ -242,7 +287,7 @@ export function useStudyPlanner() {
         chapters: getChaptersForDate(d),
       }));
     },
-    [getChaptersForDate]
+    []
   );
 
   const getProgress = useCallback((chapters: PlannedChapter[]) => {
@@ -251,20 +296,14 @@ export function useStudyPlanner() {
   }, []);
 
   return {
-    plans,
-    loading,
     selectedDate,
     setSelectedDate,
     allSubjects,
-    dateKey,
-    getChaptersForDate,
-    addChapterToDate,
-    removeChapterFromDate,
-    toggleComplete,
-    updateTimeSlot,
-    moveToNextDay,
     getWeekDays,
     getMonthDays,
     getProgress,
+    // Separate stores
+    manual,
+    smart,
   };
 }
