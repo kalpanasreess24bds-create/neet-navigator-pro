@@ -39,6 +39,7 @@ const App = () => (
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/progress" element={<ProgressDashboard />} />
             <Route path="/subscription" element={<Subscription />} />
+            <Route path="/neet-admin-x9k2" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
