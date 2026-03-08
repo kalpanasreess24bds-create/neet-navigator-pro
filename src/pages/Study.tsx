@@ -158,6 +158,14 @@ const Study = () => {
                             <Layers className="w-3.5 h-3.5" /> Cards
                           </button>
                         )}
+                        {mindMapData[ch.id] && (
+                          <button
+                            onClick={() => setActiveMindMap({ chapterId: ch.id, title: ch.name })}
+                            className="flex items-center gap-1 text-xs text-primary/70 font-medium hover:underline"
+                          >
+                            <Network className="w-3.5 h-3.5" /> Mind Map
+                          </button>
+                        )}
                       </div>
                       {ch.progress > 0 && (
                         <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
