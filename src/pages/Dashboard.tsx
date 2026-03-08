@@ -11,9 +11,9 @@ const recentlyWatched = [
 ];
 
 const quickActions = [
-  { label: "Biology", icon: "🧬", count: 7, color: "hsl(152 60% 45%)" },
-  { label: "Chemistry", icon: "⚗️", count: 5, color: "hsl(243 75% 55%)" },
-  { label: "Physics", icon: "⚛️", count: 5, color: "hsl(38 92% 55%)" },
+  { label: "Biology", icon: "🧬", count: 38, color: "hsl(152 60% 45%)" },
+  { label: "Chemistry", icon: "⚗️", count: 30, color: "hsl(243 75% 55%)" },
+  { label: "Physics", icon: "⚛️", count: 29, color: "hsl(38 92% 55%)" },
 ];
 
 const Dashboard = () => {
