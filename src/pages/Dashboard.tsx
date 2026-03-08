@@ -21,7 +21,18 @@ const quickActions = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
+  const { user: authUser } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const localUser = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
+
+  useEffect(() => {
+    if (!authUser) return;
+    const checkAdmin = async () => {
+      const { data } = await supabase.rpc("has_role", { _user_id: authUser.id, _role: "admin" });
+      setIsAdmin(!!data);
+    };
+    checkAdmin();
+  }, [authUser]);
 
   return (
     <div className="min-h-screen bg-background pb-20">
