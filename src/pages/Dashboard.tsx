@@ -1,8 +1,11 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown } from "lucide-react";
+import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import ProgressRing from "@/components/ProgressRing";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const recentlyWatched = [
   { title: "Cell: The Unit of Life", subject: "Biology", progress: 65, icon: "🧬" },
@@ -18,7 +21,18 @@ const quickActions = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
+  const { user: authUser } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const localUser = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
+
+  useEffect(() => {
+    if (!authUser) return;
+    const checkAdmin = async () => {
+      const { data } = await supabase.rpc("has_role", { _user_id: authUser.id, _role: "admin" });
+      setIsAdmin(!!data);
+    };
+    checkAdmin();
+  }, [authUser]);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -28,15 +42,25 @@ const Dashboard = () => {
           <div>
             <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
             <h1 className="text-2xl font-bold text-primary-foreground font-display">
-              {user.name || "Student"} 👋
+              {localUser.name || "Student"} 👋
             </h1>
           </div>
-          <button
-            onClick={() => navigate("/subscription")}
-            className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
-          >
-            <Crown className="w-5 h-5 text-yellow-300" />
-          </button>
+          <div className="flex items-center gap-2">
+            {isAdmin && (
+              <button
+                onClick={() => navigate("/neet-admin-x9k2")}
+                className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+              >
+                <Shield className="w-4 h-4 text-primary-foreground/70" />
+              </button>
+            )}
+            <button
+              onClick={() => navigate("/subscription")}
+              className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+            >
+              <Crown className="w-5 h-5 text-yellow-300" />
+            </button>
+          </div>
         </motion.div>
 
         {/* Daily Progress */}
