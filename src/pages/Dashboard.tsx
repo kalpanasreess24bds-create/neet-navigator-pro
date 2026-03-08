@@ -6,6 +6,7 @@ import BottomNav from "@/components/BottomNav";
 import ProgressRing from "@/components/ProgressRing";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const recentlyWatched = [
   { title: "Cell: The Unit of Life", subject: "Biology", progress: 65, icon: "🧬" },
@@ -25,10 +26,38 @@ const Dashboard = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const localUser = JSON.parse(localStorage.getItem("neet-user") || '{"name":"Student"}');
 
+  // Check for unread notifications
   useEffect(() => {
     if (!authUser) return;
+    const checkNotifications = async () => {
+      const { data: notifications } = await supabase
+        .from("notifications" as any)
+        .select("*")
+        .eq("user_id", authUser.id)
+        .eq("read", false)
+        .order("created_at", { ascending: false });
+
+      if (notifications && notifications.length > 0) {
+        for (const notif of notifications as any[]) {
+          if (notif.type === "success") {
+            toast.success(notif.title, { description: notif.message, duration: 8000 });
+          } else if (notif.type === "error") {
+            toast.error(notif.title, { description: notif.message, duration: 8000 });
+          } else {
+            toast(notif.title, { description: notif.message, duration: 8000 });
+          }
+          // Mark as read
+          await supabase
+            .from("notifications" as any)
+            .update({ read: true } as any)
+            .eq("id", notif.id);
+        }
+      }
+    };
+    checkNotifications();
+
     const checkAdmin = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("user_roles" as any)
         .select("role")
         .eq("user_id", authUser.id)
