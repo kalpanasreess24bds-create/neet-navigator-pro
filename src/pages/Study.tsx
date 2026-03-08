@@ -195,6 +195,14 @@ const Study = () => {
         />
       )}
 
+      {activeMindMap && mindMapData[activeMindMap.chapterId] && (
+        <MindMapViewer
+          data={mindMapData[activeMindMap.chapterId]}
+          title={activeMindMap.title}
+          onClose={() => setActiveMindMap(null)}
+        />
+      )}
+
       <BottomNav />
     </div>
   );
