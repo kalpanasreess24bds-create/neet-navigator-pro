@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, FileText, Layers, Play, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
+import VideoPlayer from "@/components/VideoPlayer";
 import { studyData, type ClassData, type Subject, type Chapter } from "@/data/studyContent";
 
 const Study = () => {
   const navigate = useNavigate();
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+  const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
 
   const handleBack = () => {
     if (selectedSubject) setSelectedSubject(null);
