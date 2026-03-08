@@ -27,6 +27,7 @@ const MonthlyPlanner = ({
   getProgress,
   onAdd,
   onToggle,
+  readOnly = false,
 }: MonthlyPlannerProps) => {
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [pickerDay, setPickerDay] = useState<Date | null>(null);
