@@ -80,9 +80,9 @@ export const studyData: ClassData[] = [
         color: "hsl(152 60% 45%)",
         chapters: [
           { id: "b12-1", name: "Reproduction in Organisms", videoId: "X3TAROotFfI", hasPdf: true, hasFlashcards: true, progress: 55 },
-          { id: "b12-2", name: "Human Reproduction", videoId: "6sS1cL7gIPg", hasPdf: true, hasFlashcards: true, progress: 30 },
-          { id: "b12-3", name: "Principles of Inheritance", videoId: "CBezq1fFUEA", hasPdf: true, hasFlashcards: true, progress: 0 },
-          { id: "b12-4", name: "Molecular Basis of Inheritance", videoId: "6sS1cL7gIPg", hasPdf: true, hasFlashcards: false, progress: 0 },
+          { id: "b12-2", name: "Human Reproduction", videoId: "uPkbucnXafE", hasPdf: true, hasFlashcards: true, progress: 30 },
+          { id: "b12-3", name: "Principles of Inheritance", videoId: "y_VhUbbwE3s", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "b12-4", name: "Molecular Basis of Inheritance", videoId: "0S5jWfsPTQE", hasPdf: true, hasFlashcards: false, progress: 0 },
           { id: "b12-5", name: "Evolution", videoId: "GhHOjC4oxh8", hasPdf: true, hasFlashcards: true, progress: 20 },
         ],
       },
@@ -93,8 +93,8 @@ export const studyData: ClassData[] = [
         color: "hsl(243 75% 55%)",
         chapters: [
           { id: "c12-1", name: "Solutions", videoId: "9_al8Z4MbrY", hasPdf: true, hasFlashcards: true, progress: 40 },
-          { id: "c12-2", name: "Electrochemistry", videoId: "nG4pJxOBkuo", hasPdf: true, hasFlashcards: true, progress: 0 },
-          { id: "c12-3", name: "Chemical Kinetics", videoId: "xMa1BQ8z5Jo", hasPdf: true, hasFlashcards: false, progress: 0 },
+          { id: "c12-2", name: "Electrochemistry", videoId: "XzPkOvCLV2A", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "c12-3", name: "Chemical Kinetics", videoId: "yMPNzINbwXg", hasPdf: true, hasFlashcards: false, progress: 0 },
         ],
       },
       {
