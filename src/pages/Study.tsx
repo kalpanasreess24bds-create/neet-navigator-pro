@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, FileText, Layers, Play, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
+import VideoPlayer from "@/components/VideoPlayer";
 import { studyData, type ClassData, type Subject, type Chapter } from "@/data/studyContent";
 
 const Study = () => {
   const navigate = useNavigate();
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+  const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
 
   const handleBack = () => {
     if (selectedSubject) setSelectedSubject(null);
@@ -135,9 +137,14 @@ const Study = () => {
                     <div className="flex-1">
                       <p className="font-semibold text-sm text-card-foreground">{ch.name}</p>
                       <div className="flex items-center gap-3 mt-2">
-                        <button className="flex items-center gap-1 text-xs text-primary font-medium">
-                          <Play className="w-3.5 h-3.5" /> Video
-                        </button>
+                        {ch.videoId && (
+                          <button
+                            onClick={() => setActiveVideo({ videoId: ch.videoId!, title: ch.name })}
+                            className="flex items-center gap-1 text-xs text-primary font-medium hover:underline"
+                          >
+                            <Play className="w-3.5 h-3.5" /> Video
+                          </button>
+                        )}
                         {ch.hasPdf && (
                           <button className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
                             <FileText className="w-3.5 h-3.5" /> Notes
@@ -168,6 +175,14 @@ const Study = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {activeVideo && (
+        <VideoPlayer
+          videoId={activeVideo.videoId}
+          title={activeVideo.title}
+          onClose={() => setActiveVideo(null)}
+        />
+      )}
 
       <BottomNav />
     </div>

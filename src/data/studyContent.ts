@@ -1,7 +1,7 @@
 export interface Chapter {
   id: string;
   name: string;
-  videoUrl?: string;
+  videoId?: string;
   hasPdf: boolean;
   hasFlashcards: boolean;
   progress: number;
@@ -32,13 +32,13 @@ export const studyData: ClassData[] = [
         icon: "🧬",
         color: "hsl(152 60% 45%)",
         chapters: [
-          { id: "b11-1", name: "The Living World", hasPdf: true, hasFlashcards: true, progress: 80 },
-          { id: "b11-2", name: "Biological Classification", hasPdf: true, hasFlashcards: true, progress: 60 },
-          { id: "b11-3", name: "Plant Kingdom", hasPdf: true, hasFlashcards: false, progress: 30 },
-          { id: "b11-4", name: "Animal Kingdom", hasPdf: true, hasFlashcards: true, progress: 0 },
-          { id: "b11-5", name: "Morphology of Flowering Plants", hasPdf: true, hasFlashcards: true, progress: 45 },
-          { id: "b11-6", name: "Anatomy of Flowering Plants", hasPdf: true, hasFlashcards: false, progress: 10 },
-          { id: "b11-7", name: "Cell: The Unit of Life", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "b11-1", name: "The Living World", videoId: "FMelDCSFCPk", hasPdf: true, hasFlashcards: true, progress: 80 },
+          { id: "b11-2", name: "Biological Classification", videoId: "tJGeFFXOaOE", hasPdf: true, hasFlashcards: true, progress: 60 },
+          { id: "b11-3", name: "Plant Kingdom", videoId: "dK3cSQ-bUOk", hasPdf: true, hasFlashcards: false, progress: 30 },
+          { id: "b11-4", name: "Animal Kingdom", videoId: "oZ2K8s-EDWI", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "b11-5", name: "Morphology of Flowering Plants", videoId: "uJGNw9q7Y0k", hasPdf: true, hasFlashcards: true, progress: 45 },
+          { id: "b11-6", name: "Anatomy of Flowering Plants", videoId: "2AxfI2MOg1Y", hasPdf: true, hasFlashcards: false, progress: 10 },
+          { id: "b11-7", name: "Cell: The Unit of Life", videoId: "URUJD5NEXC8", hasPdf: true, hasFlashcards: true, progress: 0 },
         ],
       },
       {
@@ -47,11 +47,11 @@ export const studyData: ClassData[] = [
         icon: "⚗️",
         color: "hsl(243 75% 55%)",
         chapters: [
-          { id: "c11-1", name: "Some Basic Concepts of Chemistry", hasPdf: true, hasFlashcards: true, progress: 70 },
-          { id: "c11-2", name: "Structure of Atom", hasPdf: true, hasFlashcards: true, progress: 50 },
-          { id: "c11-3", name: "Classification of Elements", hasPdf: true, hasFlashcards: false, progress: 20 },
-          { id: "c11-4", name: "Chemical Bonding", hasPdf: true, hasFlashcards: true, progress: 0 },
-          { id: "c11-5", name: "Thermodynamics", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "c11-1", name: "Some Basic Concepts of Chemistry", videoId: "nG4pJxOBkuo", hasPdf: true, hasFlashcards: true, progress: 70 },
+          { id: "c11-2", name: "Structure of Atom", videoId: "rcKilE9CdaA", hasPdf: true, hasFlashcards: true, progress: 50 },
+          { id: "c11-3", name: "Classification of Elements", videoId: "TL0Y5bvMGOY", hasPdf: true, hasFlashcards: false, progress: 20 },
+          { id: "c11-4", name: "Chemical Bonding", videoId: "xMa1BQ8z5Jo", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "c11-5", name: "Thermodynamics", videoId: "brP0DPGCl70", hasPdf: true, hasFlashcards: true, progress: 0 },
         ],
       },
       {
@@ -60,11 +60,11 @@ export const studyData: ClassData[] = [
         icon: "⚛️",
         color: "hsl(38 92% 55%)",
         chapters: [
-          { id: "p11-1", name: "Units and Measurements", hasPdf: true, hasFlashcards: true, progress: 90 },
-          { id: "p11-2", name: "Motion in a Straight Line", hasPdf: true, hasFlashcards: true, progress: 65 },
-          { id: "p11-3", name: "Motion in a Plane", hasPdf: true, hasFlashcards: false, progress: 40 },
-          { id: "p11-4", name: "Laws of Motion", hasPdf: true, hasFlashcards: true, progress: 15 },
-          { id: "p11-5", name: "Work, Energy and Power", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "p11-1", name: "Units and Measurements", videoId: "VFbyDCG_j18", hasPdf: true, hasFlashcards: true, progress: 90 },
+          { id: "p11-2", name: "Motion in a Straight Line", videoId: "ObHE27Mg10U", hasPdf: true, hasFlashcards: true, progress: 65 },
+          { id: "p11-3", name: "Motion in a Plane", videoId: "L6F5RYlzOmA", hasPdf: true, hasFlashcards: false, progress: 40 },
+          { id: "p11-4", name: "Laws of Motion", videoId: "5DqfaYA8_Sc", hasPdf: true, hasFlashcards: true, progress: 15 },
+          { id: "p11-5", name: "Work, Energy and Power", videoId: "2duVBnKxolE", hasPdf: true, hasFlashcards: true, progress: 0 },
         ],
       },
     ],
@@ -79,11 +79,11 @@ export const studyData: ClassData[] = [
         icon: "🧬",
         color: "hsl(152 60% 45%)",
         chapters: [
-          { id: "b12-1", name: "Reproduction in Organisms", hasPdf: true, hasFlashcards: true, progress: 55 },
-          { id: "b12-2", name: "Human Reproduction", hasPdf: true, hasFlashcards: true, progress: 30 },
-          { id: "b12-3", name: "Principles of Inheritance", hasPdf: true, hasFlashcards: true, progress: 0 },
-          { id: "b12-4", name: "Molecular Basis of Inheritance", hasPdf: true, hasFlashcards: false, progress: 0 },
-          { id: "b12-5", name: "Evolution", hasPdf: true, hasFlashcards: true, progress: 20 },
+          { id: "b12-1", name: "Reproduction in Organisms", videoId: "X3TAROotFfI", hasPdf: true, hasFlashcards: true, progress: 55 },
+          { id: "b12-2", name: "Human Reproduction", videoId: "6sS1cL7gIPg", hasPdf: true, hasFlashcards: true, progress: 30 },
+          { id: "b12-3", name: "Principles of Inheritance", videoId: "CBezq1fFUEA", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "b12-4", name: "Molecular Basis of Inheritance", videoId: "6sS1cL7gIPg", hasPdf: true, hasFlashcards: false, progress: 0 },
+          { id: "b12-5", name: "Evolution", videoId: "GhHOjC4oxh8", hasPdf: true, hasFlashcards: true, progress: 20 },
         ],
       },
       {
@@ -92,9 +92,9 @@ export const studyData: ClassData[] = [
         icon: "⚗️",
         color: "hsl(243 75% 55%)",
         chapters: [
-          { id: "c12-1", name: "Solutions", hasPdf: true, hasFlashcards: true, progress: 40 },
-          { id: "c12-2", name: "Electrochemistry", hasPdf: true, hasFlashcards: true, progress: 0 },
-          { id: "c12-3", name: "Chemical Kinetics", hasPdf: true, hasFlashcards: false, progress: 0 },
+          { id: "c12-1", name: "Solutions", videoId: "9_al8Z4MbrY", hasPdf: true, hasFlashcards: true, progress: 40 },
+          { id: "c12-2", name: "Electrochemistry", videoId: "nG4pJxOBkuo", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "c12-3", name: "Chemical Kinetics", videoId: "xMa1BQ8z5Jo", hasPdf: true, hasFlashcards: false, progress: 0 },
         ],
       },
       {
@@ -103,9 +103,9 @@ export const studyData: ClassData[] = [
         icon: "⚛️",
         color: "hsl(38 92% 55%)",
         chapters: [
-          { id: "p12-1", name: "Electric Charges and Fields", hasPdf: true, hasFlashcards: true, progress: 75 },
-          { id: "p12-2", name: "Electrostatic Potential", hasPdf: true, hasFlashcards: true, progress: 50 },
-          { id: "p12-3", name: "Current Electricity", hasPdf: true, hasFlashcards: true, progress: 0 },
+          { id: "p12-1", name: "Electric Charges and Fields", videoId: "VFbyDCG_j18", hasPdf: true, hasFlashcards: true, progress: 75 },
+          { id: "p12-2", name: "Electrostatic Potential", videoId: "ObHE27Mg10U", hasPdf: true, hasFlashcards: true, progress: 50 },
+          { id: "p12-3", name: "Current Electricity", videoId: "5DqfaYA8_Sc", hasPdf: true, hasFlashcards: true, progress: 0 },
         ],
       },
     ],
