@@ -22,19 +22,23 @@ const StudyPlannerSection = () => {
   const [planMode, setPlanMode] = useState<PlanMode>("my-plan");
   const planner = useStudyPlanner();
 
-  const dailyChapters = planner.getChaptersForDate(planner.selectedDate);
+  // Pick the right store based on mode
+  const store = planMode === "smart-plan" ? planner.smart : planner.manual;
+
+  const dailyChapters = store.getChaptersForDate(planner.selectedDate);
   const dailyProgress = planner.getProgress(dailyChapters);
 
   const handleSmartGenerate = async (
     plans: { date: Date; chapters: PlannedChapter[] }[]
   ) => {
+    // Clear old smart plan before generating new one
+    await planner.smart.clearAllPlans();
     for (const plan of plans) {
       for (const ch of plan.chapters) {
-        await planner.addChapterToDate(plan.date, ch);
+        await planner.smart.addChapterToDate(plan.date, ch);
       }
     }
-    // Auto-switch to My Plan daily view after generation
-    setPlanMode("my-plan");
+    // Stay on smart-plan mode and switch to daily view
     setActiveTab("daily");
   };
 
@@ -64,16 +68,16 @@ const StudyPlannerSection = () => {
         </button>
       </div>
 
-      {planMode === "smart-plan" ? (
+      {planMode === "smart-plan" && Object.keys(planner.smart.plans).length === 0 ? (
         <motion.div
-          key="smart"
+          key="smart-generator"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
         >
           <SmartPlanGenerator
             onGenerate={handleSmartGenerate}
-            existingPlanDates={Object.keys(planner.plans)}
+            existingPlanDates={Object.keys(planner.smart.plans)}
           />
         </motion.div>
       ) : (
@@ -96,9 +100,17 @@ const StudyPlannerSection = () => {
             ))}
           </div>
 
+          {/* Regenerate button for smart plan */}
+          {planMode === "smart-plan" && (
+            <SmartPlanGenerator
+              onGenerate={handleSmartGenerate}
+              existingPlanDates={Object.keys(planner.smart.plans)}
+            />
+          )}
+
           {/* Content */}
           <motion.div
-            key={activeTab}
+            key={`${planMode}-${activeTab}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
@@ -109,31 +121,31 @@ const StudyPlannerSection = () => {
                 chapters={dailyChapters}
                 progress={dailyProgress}
                 onDateChange={planner.setSelectedDate}
-                onAdd={(ch) => planner.addChapterToDate(planner.selectedDate, ch)}
-                onRemove={(id) => planner.removeChapterFromDate(planner.selectedDate, id)}
-                onToggle={(id) => planner.toggleComplete(planner.selectedDate, id)}
-                onTimeSlot={(id, slot) => planner.updateTimeSlot(planner.selectedDate, id, slot)}
+                onAdd={(ch) => store.addChapterToDate(planner.selectedDate, ch)}
+                onRemove={(id) => store.removeChapterFromDate(planner.selectedDate, id)}
+                onToggle={(id) => store.toggleComplete(planner.selectedDate, id)}
+                onTimeSlot={(id, slot) => store.updateTimeSlot(planner.selectedDate, id, slot)}
               />
             )}
             {activeTab === "weekly" && (
               <WeeklyPlanner
                 weekRef={planner.selectedDate}
                 onWeekChange={planner.setSelectedDate}
-                getChaptersForDate={planner.getChaptersForDate}
+                getChaptersForDate={store.getChaptersForDate}
                 getProgress={planner.getProgress}
-                onAdd={(d, ch) => planner.addChapterToDate(d, ch)}
-                onToggle={(d, id) => planner.toggleComplete(d, id)}
-                onMoveToNext={(d, id) => planner.moveToNextDay(d, id)}
+                onAdd={(d, ch) => store.addChapterToDate(d, ch)}
+                onToggle={(d, id) => store.toggleComplete(d, id)}
+                onMoveToNext={(d, id) => store.moveToNextDay(d, id)}
               />
             )}
             {activeTab === "monthly" && (
               <MonthlyPlanner
                 monthRef={planner.selectedDate}
                 onMonthChange={planner.setSelectedDate}
-                getChaptersForDate={planner.getChaptersForDate}
+                getChaptersForDate={store.getChaptersForDate}
                 getProgress={planner.getProgress}
-                onAdd={(d, ch) => planner.addChapterToDate(d, ch)}
-                onToggle={(d, id) => planner.toggleComplete(d, id)}
+                onAdd={(d, ch) => store.addChapterToDate(d, ch)}
+                onToggle={(d, id) => store.toggleComplete(d, id)}
               />
             )}
           </motion.div>
