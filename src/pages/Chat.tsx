@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Send, Bot, User } from "lucide-react";
+import { Send, Bot, User, Mic, MicOff, Square } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
