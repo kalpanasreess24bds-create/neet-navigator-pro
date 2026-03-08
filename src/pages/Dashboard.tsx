@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3 } from "lucide-react";
+import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import ProgressRing from "@/components/ProgressRing";
@@ -67,6 +67,22 @@ const Dashboard = () => {
           <div className="text-left">
             <p className="text-sm font-semibold text-primary-foreground">Progress Dashboard</p>
             <p className="text-xs text-primary-foreground/60">View reports & parent access</p>
+          </div>
+        </motion.button>
+
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          onClick={() => navigate("/subscription")}
+          className="w-full mt-3 rounded-2xl p-4 bg-accent flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md border border-border"
+        >
+          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+            <Crown className="w-5 h-5 text-primary" />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-semibold text-foreground">Go Premium</p>
+            <p className="text-xs text-muted-foreground">Unlock all features & tests</p>
           </div>
         </motion.button>
       </div>

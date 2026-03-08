@@ -14,6 +14,7 @@ import Chat from "./pages/Chat";
 import Bookmarks from "./pages/Bookmarks";
 import ProgressDashboard from "./pages/ProgressDashboard";
 import Auth from "./pages/Auth";
+import Subscription from "./pages/Subscription";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/chat" element={<Chat />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/progress" element={<ProgressDashboard />} />
+            <Route path="/subscription" element={<Subscription />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
