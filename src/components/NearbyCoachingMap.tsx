@@ -271,6 +271,7 @@ const NearbyCoachingMap = () => {
           ))}
         </div>
       </ScrollArea>
+      </div>
     </div>
   );
 };
