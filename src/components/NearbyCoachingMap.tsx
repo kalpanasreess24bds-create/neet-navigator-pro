@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MapPin, Navigation, Star, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MapPin, Navigation, Star, ExternalLink, Search, Locate } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Fix default Leaflet icon issue
