@@ -42,6 +42,7 @@ const App = () => (
             <Route path="/progress" element={<ProgressDashboard />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/neet-admin-x9k2" element={<AdminDashboard />} />
+            <Route path="/coaching-centres" element={<CoachingCentres />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
