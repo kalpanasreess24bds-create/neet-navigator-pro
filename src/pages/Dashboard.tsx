@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown, Shield, LogOut } from "lucide-react";
+import { BookOpen, FlaskConical, Atom, TrendingUp, Play, Clock, BarChart3, Crown, Shield, LogOut, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import ProgressRing from "@/components/ProgressRing";
@@ -146,6 +146,21 @@ const Dashboard = () => {
           </div>
         </motion.button>
 
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18 }}
+          onClick={() => navigate("/coaching-centres")}
+          className="w-full rounded-2xl p-4 bg-accent flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md mt-3"
+        >
+          <div className="w-10 h-10 rounded-xl bg-accent-foreground/10 flex items-center justify-center">
+            <MapPin className="w-5 h-5 text-accent-foreground" />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-semibold text-accent-foreground">Nearby Coaching Centres</p>
+            <p className="text-xs text-accent-foreground/60">Find top NEET institutes near you</p>
+          </div>
+        </motion.button>
       </div>
 
       <div className="px-5 mt-6 space-y-6">
