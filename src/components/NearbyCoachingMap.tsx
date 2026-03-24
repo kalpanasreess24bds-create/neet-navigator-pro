@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MapPin, Navigation, Star, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MapPin, Navigation, Star, ExternalLink, Search, Locate } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Fix default Leaflet icon issue
@@ -108,9 +109,12 @@ const NearbyCoachingMap = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searching, setSearching] = useState(false);
   const isMobile = useIsMobile();
 
-  useEffect(() => {
+  const detectLocation = useCallback(() => {
+    setLoading(true);
     if (!navigator.geolocation) {
       setError("Geolocation is not supported by your browser.");
       setLoading(false);
@@ -119,16 +123,37 @@ const NearbyCoachingMap = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setSearchQuery("");
         setLoading(false);
       },
       () => {
-        // Fallback to New Delhi
         setUserPos({ lat: 28.6139, lng: 77.209 });
         setLoading(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
   }, []);
+
+  useEffect(() => { detectLocation(); }, [detectLocation]);
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setSearching(true);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`
+      );
+      const data = await res.json();
+      if (data.length > 0) {
+        setUserPos({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) });
+        setSelectedId(null);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setSearching(false);
+    }
+  };
 
   const centres = useMemo(() => (userPos ? generateCentres(userPos.lat, userPos.lng) : []), [userPos]);
 
@@ -141,7 +166,28 @@ const NearbyCoachingMap = () => {
   };
 
   return (
-    <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-4 w-full`} style={{ minHeight: isMobile ? "auto" : "70vh" }}>
+    <div className="space-y-3 w-full">
+      {/* Search Bar */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search city or area (e.g. Mumbai, Kota)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="pl-9"
+          />
+        </div>
+        <Button onClick={handleSearch} disabled={searching} size="default">
+          {searching ? "Searching..." : "Search"}
+        </Button>
+        <Button onClick={detectLocation} variant="outline" size="icon" title="Use my location">
+          <Locate className="w-4 h-4" />
+        </Button>
+      </div>
+
+      <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-4 w-full`} style={{ minHeight: isMobile ? "auto" : "70vh" }}>
       {/* Map */}
       <div className={`${isMobile ? "h-[50vh]" : "flex-[3]"} rounded-2xl overflow-hidden border border-border shadow-sm`}>
         <MapContainer center={[userPos.lat, userPos.lng]} zoom={13} className="h-full w-full" scrollWheelZoom>
@@ -225,6 +271,7 @@ const NearbyCoachingMap = () => {
           ))}
         </div>
       </ScrollArea>
+      </div>
     </div>
   );
 };
