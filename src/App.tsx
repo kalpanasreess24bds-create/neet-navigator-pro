@@ -17,6 +17,7 @@ import Auth from "./pages/Auth";
 import Subscription from "./pages/Subscription";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
+import CoachingCentres from "./pages/CoachingCentres";
 
 const queryClient = new QueryClient();
 
