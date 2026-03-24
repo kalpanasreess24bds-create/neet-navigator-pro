@@ -166,7 +166,28 @@ const NearbyCoachingMap = () => {
   };
 
   return (
-    <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-4 w-full`} style={{ minHeight: isMobile ? "auto" : "70vh" }}>
+    <div className="space-y-3 w-full">
+      {/* Search Bar */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search city or area (e.g. Mumbai, Kota)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="pl-9"
+          />
+        </div>
+        <Button onClick={handleSearch} disabled={searching} size="default">
+          {searching ? "Searching..." : "Search"}
+        </Button>
+        <Button onClick={detectLocation} variant="outline" size="icon" title="Use my location">
+          <Locate className="w-4 h-4" />
+        </Button>
+      </div>
+
+      <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-4 w-full`} style={{ minHeight: isMobile ? "auto" : "70vh" }}>
       {/* Map */}
       <div className={`${isMobile ? "h-[50vh]" : "flex-[3]"} rounded-2xl overflow-hidden border border-border shadow-sm`}>
         <MapContainer center={[userPos.lat, userPos.lng]} zoom={13} className="h-full w-full" scrollWheelZoom>
