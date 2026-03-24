@@ -109,9 +109,12 @@ const NearbyCoachingMap = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searching, setSearching] = useState(false);
   const isMobile = useIsMobile();
 
-  useEffect(() => {
+  const detectLocation = useCallback(() => {
+    setLoading(true);
     if (!navigator.geolocation) {
       setError("Geolocation is not supported by your browser.");
       setLoading(false);
@@ -120,16 +123,37 @@ const NearbyCoachingMap = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setSearchQuery("");
         setLoading(false);
       },
       () => {
-        // Fallback to New Delhi
         setUserPos({ lat: 28.6139, lng: 77.209 });
         setLoading(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
   }, []);
+
+  useEffect(() => { detectLocation(); }, [detectLocation]);
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setSearching(true);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`
+      );
+      const data = await res.json();
+      if (data.length > 0) {
+        setUserPos({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) });
+        setSelectedId(null);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setSearching(false);
+    }
+  };
 
   const centres = useMemo(() => (userPos ? generateCentres(userPos.lat, userPos.lng) : []), [userPos]);
 
