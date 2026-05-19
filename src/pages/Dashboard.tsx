@@ -211,7 +211,37 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
+        {/* Secondary nav — reports & discovery, pushed below the fold */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="space-y-3 pt-2">
+          <button
+            onClick={() => navigate("/progress")}
+            className="w-full rounded-2xl p-4 bg-primary flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md min-h-[64px]"
+          >
+            <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-primary-foreground">Progress Dashboard</p>
+              <p className="text-xs text-primary-foreground/70">View reports & parent access</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => navigate("/coaching-centres")}
+            className="w-full rounded-2xl p-4 bg-card border border-border flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-sm min-h-[64px]"
+          >
+            <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-accent" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-card-foreground">Nearby Coaching Centres</p>
+              <p className="text-xs text-muted-foreground">Find top NEET institutes near you</p>
+            </div>
+          </button>
+        </motion.div>
+
       </div>
+
 
       <BottomNav />
     </div>
