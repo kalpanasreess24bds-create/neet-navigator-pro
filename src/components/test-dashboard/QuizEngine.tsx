@@ -303,17 +303,17 @@ const QuizEngine = ({ questions, timeMinutes, title, onComplete, onBack, instant
                     key={i}
                     onClick={() => handleOptionSelect(i)}
                     disabled={showFeedback}
-                    className={`w-full text-left p-3.5 rounded-xl border-2 transition-all text-sm ${optionClass}`}
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all text-base min-h-[60px] ${optionClass}`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shrink-0 ${
+                      <span className={`inline-flex items-center justify-center w-9 h-9 rounded-full text-sm font-bold shrink-0 ${
                         isSelected && !showFeedback
                           ? "bg-primary text-primary-foreground"
                           : "bg-secondary text-secondary-foreground"
                       }`}>
                         {String.fromCharCode(65 + i)}
                       </span>
-                      <span className="flex-1">{opt}</span>
+                      <span className="flex-1 leading-relaxed">{opt}</span>
                       {showFeedback && i === q.correctAnswer && (
                         <CheckCircle2 className="w-4 h-4 text-[hsl(142,71%,35%)] shrink-0" />
                       )}
