@@ -24,10 +24,10 @@
     --muted: 220 15% 92%;
     --muted-foreground: 220 10% 46%;
 
-    --accent: 38 92% 55%;
-    --accent-foreground: 30 80% 15%;
+    --accent: 170 45% 42%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 55%;
+    --destructive: 4 60% 52%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 15% 90%;
@@ -36,7 +36,7 @@
 
     --radius: 0.75rem;
 
-    --success: 152 60% 45%;
+    --success: 152 50% 42%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 55%;
