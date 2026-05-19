@@ -289,7 +289,7 @@ const Chat = () => {
               <button
                 key={q}
                 onClick={() => sendMessage(q)}
-                className="px-3 py-2 bg-secondary rounded-xl text-xs font-medium text-secondary-foreground hover:bg-muted transition-colors"
+                className="px-4 py-3 bg-secondary rounded-xl text-sm font-medium text-secondary-foreground hover:bg-muted transition-colors min-h-[44px]"
               >
                 {q}
               </button>
