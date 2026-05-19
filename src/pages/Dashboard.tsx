@@ -128,40 +128,37 @@ const Dashboard = () => {
         </motion.div>
       </div>
 
-      {/* Progress Dashboard Link */}
-      <div className="px-5 mt-4">
+      {/* PRIMARY ACTIONS — what a student opening the app needs first */}
+      <div className="px-5 mt-4 grid grid-cols-2 gap-3">
         <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          onClick={() => navigate("/progress")}
-          className="w-full rounded-2xl p-4 bg-primary flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md"
+          transition={{ delay: 0.12 }}
+          onClick={() => navigate("/study")}
+          className="rounded-2xl p-4 gradient-primary text-left shadow-md hover:scale-[1.02] transition-transform min-h-[96px] flex flex-col justify-between"
         >
-          <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-semibold text-primary-foreground">Progress Dashboard</p>
-            <p className="text-xs text-primary-foreground/60">View reports & parent access</p>
+          <Play className="w-5 h-5 text-primary-foreground" />
+          <div>
+            <p className="text-sm font-semibold text-primary-foreground">Resume Last Topic</p>
+            <p className="text-[11px] text-primary-foreground/70 mt-0.5">Pick up where you left off</p>
           </div>
         </motion.button>
 
         <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.18 }}
-          onClick={() => navigate("/coaching-centres")}
-          className="w-full rounded-2xl p-4 bg-accent flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md mt-3"
+          transition={{ delay: 0.14 }}
+          onClick={() => navigate("/tests")}
+          className="rounded-2xl p-4 bg-accent text-left shadow-md hover:scale-[1.02] transition-transform min-h-[96px] flex flex-col justify-between"
         >
-          <div className="w-10 h-10 rounded-xl bg-accent-foreground/10 flex items-center justify-center">
-            <MapPin className="w-5 h-5 text-accent-foreground" />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-semibold text-accent-foreground">Nearby Coaching Centres</p>
-            <p className="text-xs text-accent-foreground/60">Find top NEET institutes near you</p>
+          <Target className="w-5 h-5 text-accent-foreground" />
+          <div>
+            <p className="text-sm font-semibold text-accent-foreground">Today's Mock Test</p>
+            <p className="text-[11px] text-accent-foreground/80 mt-0.5">Sharpen your weak areas</p>
           </div>
         </motion.button>
       </div>
+
 
       <div className="px-5 mt-6 space-y-6">
         {/* Subject Quick Access */}
