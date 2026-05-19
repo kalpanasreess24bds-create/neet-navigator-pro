@@ -4,6 +4,7 @@ import { Send, Bot, User, Mic, MicOff, Square } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
