@@ -9,16 +9,24 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 const recentlyWatched = [
-  { title: "Cell: The Unit of Life", subject: "Biology", progress: 0, icon: "🧬" },
+  { title: "Cell: The Unit of Life", subject: "Botany", progress: 0, icon: "🌿" },
   { title: "Chemical Bonding", subject: "Chemistry", progress: 0, icon: "⚗️" },
   { title: "Laws of Motion", subject: "Physics", progress: 0, icon: "⚛️" },
 ];
 
-const quickActions = [
-  { label: "Biology", icon: "🧬", count: 38, color: "hsl(152 60% 45%)" },
-  { label: "Chemistry", icon: "⚗️", count: 30, color: "hsl(243 75% 55%)" },
-  { label: "Physics", icon: "⚛️", count: 29, color: "hsl(38 92% 55%)" },
+const subjects = [
+  { label: "Physics", icon: "⚛️", count: 29, tint: "tint-physics", accent: "text-sky-700" },
+  { label: "Chemistry", icon: "⚗️", count: 30, tint: "tint-chemistry", accent: "text-violet-700" },
+  { label: "Botany", icon: "🌿", count: 19, tint: "tint-botany", accent: "text-emerald-700" },
+  { label: "Zoology", icon: "🦋", count: 19, tint: "tint-zoology", accent: "text-orange-700" },
 ];
+
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
