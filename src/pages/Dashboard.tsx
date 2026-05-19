@@ -9,16 +9,24 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 const recentlyWatched = [
-  { title: "Cell: The Unit of Life", subject: "Biology", progress: 0, icon: "🧬" },
+  { title: "Cell: The Unit of Life", subject: "Botany", progress: 0, icon: "🌿" },
   { title: "Chemical Bonding", subject: "Chemistry", progress: 0, icon: "⚗️" },
   { title: "Laws of Motion", subject: "Physics", progress: 0, icon: "⚛️" },
 ];
 
-const quickActions = [
-  { label: "Biology", icon: "🧬", count: 38, color: "hsl(152 60% 45%)" },
-  { label: "Chemistry", icon: "⚗️", count: 30, color: "hsl(243 75% 55%)" },
-  { label: "Physics", icon: "⚛️", count: 29, color: "hsl(38 92% 55%)" },
+const subjects = [
+  { label: "Physics", icon: "⚛️", count: 29, tint: "tint-physics", accent: "text-sky-700" },
+  { label: "Chemistry", icon: "⚗️", count: 30, tint: "tint-chemistry", accent: "text-violet-700" },
+  { label: "Botany", icon: "🌿", count: 19, tint: "tint-botany", accent: "text-emerald-700" },
+  { label: "Zoology", icon: "🦋", count: 19, tint: "tint-zoology", accent: "text-orange-700" },
 ];
+
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -69,30 +77,31 @@ const Dashboard = () => {
   }, [authUser]);
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <div className="gradient-hero px-5 pt-12 pb-8 rounded-b-3xl">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
+    <div className="min-h-screen bg-background pb-24">
+      {/* Header — airy, calm */}
+      <div className="px-6 pt-12 pb-6">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between">
           <div>
-            <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
-            <h1 className="text-2xl font-bold text-primary-foreground font-display">
-              {localUser.name || "Student"} 👋
+            <p className="text-slate-500 text-sm font-medium">{getGreeting()},</p>
+            <h1 className="text-2xl font-semibold text-slate-800 mt-0.5">
+              {localUser.name || "Student"}
             </h1>
+            <p className="text-sm text-slate-500 mt-1">Let's make gentle progress today.</p>
           </div>
           <div className="flex items-center gap-2">
             {isAdmin && (
               <button
                 onClick={() => navigate("/neet-admin-x9k2")}
-                className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+                className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors"
               >
-                <Shield className="w-4 h-4 text-primary-foreground/70" />
+                <Shield className="w-4 h-4 text-slate-600" />
               </button>
             )}
             <button
               onClick={() => navigate("/subscription")}
-              className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+              className="w-10 h-10 rounded-full bg-sky-50 flex items-center justify-center hover:bg-sky-100 transition-colors"
             >
-              <Crown className="w-5 h-5 text-yellow-300" />
+              <Crown className="w-5 h-5 text-amber-400" />
             </button>
             <button
               onClick={async () => {
@@ -100,142 +109,162 @@ const Dashboard = () => {
                 localStorage.removeItem("neet-user");
                 navigate("/auth");
               }}
-              className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+              className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors"
             >
-              <LogOut className="w-4 h-4 text-primary-foreground/70" />
+              <LogOut className="w-4 h-4 text-slate-600" />
             </button>
           </div>
         </motion.div>
+      </div>
 
-        {/* Daily Progress */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+      <div className="px-6 space-y-8">
+        {/* HERO — Resume Last Topic, gentle blue gradient */}
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-5 rounded-2xl p-4 bg-card text-card-foreground shadow-sm border border-border"
+          onClick={() => navigate("/study")}
+          className="w-full gradient-resume rounded-2xl p-6 text-left shadow-md hover:shadow-lg transition-shadow"
         >
           <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="w-4 h-4 text-accent" />
-                <span className="text-xs font-semibold text-muted-foreground">Daily Progress</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-white/85 uppercase tracking-wider">Continue where you left off</p>
+              <h2 className="text-xl font-semibold text-white mt-2">Cell: The Unit of Life</h2>
+              <p className="text-sm text-white/85 mt-1">Botany · Chapter 8</p>
+              <div className="mt-4 inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                <Play className="w-4 h-4 text-white" />
+                <span className="text-sm font-medium text-white">Resume</span>
               </div>
-              <p className="text-2xl font-bold text-card-foreground font-display">0%</p>
-              <p className="text-xs text-muted-foreground mt-0.5">0 of 7 tasks done today</p>
             </div>
-            <ProgressRing progress={0} size={64} strokeWidth={5} />
+            <div className="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center text-3xl shrink-0">
+              🌿
+            </div>
+          </div>
+        </motion.button>
+
+        {/* DAILY GOALS — sage green progress rings */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="text-base font-semibold text-slate-800">Today's Goals</h2>
+            <span className="text-xs text-slate-500">0 of 7 done</span>
+          </div>
+          <div className="elevated-card p-6">
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { label: "Study", value: 0, icon: BookOpen },
+                { label: "Practice", value: 0, icon: Target },
+                { label: "Revise", value: 0, icon: TrendingUp },
+              ].map((g) => (
+                <div key={g.label} className="flex flex-col items-center gap-2">
+                  <ProgressRing progress={g.value} size={64} strokeWidth={6} />
+                  <div className="text-center">
+                    <p className="text-xs font-medium text-slate-700">{g.label}</p>
+                    <p className="text-[11px] text-slate-500">{g.value}%</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </motion.div>
-      </div>
 
-      {/* PRIMARY ACTIONS — what a student opening the app needs first */}
-      <div className="px-5 mt-4 grid grid-cols-2 gap-3">
+        {/* MOCK TEST CTA — soft sage */}
         <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12 }}
-          onClick={() => navigate("/study")}
-          className="rounded-2xl p-4 gradient-primary text-left shadow-md hover:scale-[1.02] transition-transform min-h-[96px] flex flex-col justify-between"
-        >
-          <Play className="w-5 h-5 text-primary-foreground" />
-          <div>
-            <p className="text-sm font-semibold text-primary-foreground">Resume Last Topic</p>
-            <p className="text-[11px] text-primary-foreground/70 mt-0.5">Pick up where you left off</p>
-          </div>
-        </motion.button>
-
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.14 }}
+          transition={{ delay: 0.18 }}
           onClick={() => navigate("/tests")}
-          className="rounded-2xl p-4 bg-accent text-left shadow-md hover:scale-[1.02] transition-transform min-h-[96px] flex flex-col justify-between"
+          className="w-full rounded-2xl p-5 bg-emerald-50 border border-emerald-100 flex items-center gap-4 text-left hover:bg-emerald-100/70 transition-colors"
         >
-          <Target className="w-5 h-5 text-accent-foreground" />
-          <div>
-            <p className="text-sm font-semibold text-accent-foreground">Today's Mock Test</p>
-            <p className="text-[11px] text-accent-foreground/80 mt-0.5">Sharpen your weak areas</p>
+          <div className="w-12 h-12 rounded-2xl bg-emerald-400 flex items-center justify-center shrink-0">
+            <Target className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-emerald-900">Today's Mock Test</p>
+            <p className="text-xs text-emerald-700/80 mt-0.5">A gentle 30-minute check-in</p>
           </div>
         </motion.button>
-      </div>
 
-
-      <div className="px-5 mt-6 space-y-6">
-        {/* Subject Quick Access */}
+        {/* SUBJECTS — 4 pastel tinted cards */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-          <h2 className="font-display font-bold text-base text-foreground mb-3">Subjects</h2>
-          <div className="grid grid-cols-3 gap-3">
-            {quickActions.map((subj) => (
+          <h2 className="text-base font-semibold text-slate-800 mb-4">Syllabus</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {subjects.map((subj) => (
               <button
                 key={subj.label}
                 onClick={() => navigate("/study")}
-                className="elevated-card rounded-2xl p-4 text-center hover:scale-[1.02] transition-transform"
+                className={`${subj.tint} rounded-2xl p-5 text-left hover:shadow-md transition-shadow border border-white/60 min-h-[120px] flex flex-col justify-between`}
               >
-                <span className="text-2xl">{subj.icon}</span>
-                <p className="text-sm font-semibold text-card-foreground mt-2">{subj.label}</p>
-                <p className="text-xs text-muted-foreground">{subj.count} chapters</p>
+                <span className="text-3xl">{subj.icon}</span>
+                <div>
+                  <p className={`text-base font-semibold ${subj.accent}`}>{subj.label}</p>
+                  <p className="text-xs text-slate-600 mt-0.5">{subj.count} chapters</p>
+                </div>
               </button>
             ))}
           </div>
         </motion.div>
 
-        {/* Recently Watched */}
+        {/* Recently Studied */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-          <h2 className="font-display font-bold text-base text-foreground mb-3">Continue Learning</h2>
+          <h2 className="text-base font-semibold text-slate-800 mb-4">Recently Studied</h2>
           <div className="space-y-3">
             {recentlyWatched.map((item, i) => (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.1 }}
-                className="elevated-card rounded-xl p-4 flex items-center gap-4 hover:scale-[1.01] transition-transform cursor-pointer"
+                transition={{ delay: 0.3 + i * 0.08 }}
+                className="elevated-card p-5 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => navigate("/study")}
               >
-                <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center text-xl shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-sky-50 flex items-center justify-center text-xl shrink-0">
                   {item.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-card-foreground truncate">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{item.subject}</p>
-                  <div className="mt-1.5 h-1.5 bg-muted rounded-full overflow-hidden">
+                  <p className="font-medium text-sm text-slate-800 truncate">{item.title}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{item.subject}</p>
+                  <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full gradient-primary rounded-full transition-all duration-500"
+                      className="h-full bg-emerald-400 rounded-full transition-all duration-500"
                       style={{ width: `${item.progress}%` }}
                     />
                   </div>
                 </div>
-                <Play className="w-5 h-5 text-primary shrink-0" />
+                <Play className="w-5 h-5 text-sky-500 shrink-0" />
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* Secondary nav — reports & discovery, pushed below the fold */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="space-y-3 pt-2">
+        {/* Secondary nav */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="grid grid-cols-2 gap-3 pt-2">
           <button
             onClick={() => navigate("/progress")}
-            className="w-full rounded-2xl p-4 bg-primary flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-md min-h-[64px]"
+            className="rounded-2xl p-5 bg-white border border-slate-200 flex flex-col gap-3 hover:shadow-md transition-shadow text-left min-h-[100px]"
           >
-            <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-2xl bg-sky-50 flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-sky-600" />
             </div>
-            <div className="text-left">
-              <p className="text-sm font-semibold text-primary-foreground">Progress Dashboard</p>
-              <p className="text-xs text-primary-foreground/70">View reports & parent access</p>
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Analytics</p>
+              <p className="text-xs text-slate-500 mt-0.5">Track your progress</p>
             </div>
           </button>
 
           <button
             onClick={() => navigate("/coaching-centres")}
-            className="w-full rounded-2xl p-4 bg-card border border-border flex items-center gap-3 hover:scale-[1.01] transition-transform shadow-sm min-h-[64px]"
+            className="rounded-2xl p-5 bg-white border border-slate-200 flex flex-col gap-3 hover:shadow-md transition-shadow text-left min-h-[100px]"
           >
-            <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-accent" />
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-emerald-600" />
             </div>
-            <div className="text-left">
-              <p className="text-sm font-semibold text-card-foreground">Nearby Coaching Centres</p>
-              <p className="text-xs text-muted-foreground">Find top NEET institutes near you</p>
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Coaching Centres</p>
+              <p className="text-xs text-slate-500 mt-0.5">Find institutes nearby</p>
             </div>
           </button>
         </motion.div>
